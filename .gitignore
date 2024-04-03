@@ -6,4 +6,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+
 .old/
+
+#cache
+
+/__pycache__/
