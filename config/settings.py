@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'django_seed',
+    'knox',
     'api',
 ]
 
@@ -138,10 +138,11 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSION': 'v1',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
     # Auth
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication'
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.common.auth.TokenAuthentication',
+    ),
     # Pagination
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
     'PAGE_SIZE': 15,
 }
+

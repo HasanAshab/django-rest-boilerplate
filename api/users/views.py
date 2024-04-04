@@ -4,7 +4,6 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .forms import UpdateProfileForm
 from .pagination import UserCursorPagination
 from .serializers import ListUserSerializer, UserProfileSerializer, ShowUserSerializer
 
@@ -35,10 +34,8 @@ class UserViewSet(viewsets.ViewSet):
         profile = UserProfileSerializer(request.user).data
         return Response(profile)
     
-    @action(detail=False, methods=['patch'], url_path='me/up')
+    @action(detail=False, methods=['patch'], url_path='me')
     def updateProfile(self, request):
-        print(UpdateProfileForm(request.POST).is_valid())
-        
         return Response('')
 
     @action(detail=True, methods=['patch'], url_path='admin')

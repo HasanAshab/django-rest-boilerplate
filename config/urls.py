@@ -25,15 +25,7 @@ router.register(r'users', UserViewSet, basename='user')
 
 
 urlpatterns = [
-  path('', include(router.urls)),
-  path('admin/', admin.site.urls),
-  path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path(r'api/auth/', include('knox.urls')),
+    path('api/', include(router.urls)),
+    path('api/admin/', admin.site.urls),
 ]
-
-
-# from django_seed import Seed
-# from django.contrib.auth.models import User
-# 
-# seeder = Seed.seeder()
-# seeder.add_entity(User, 15)
-# seeder.execute()
