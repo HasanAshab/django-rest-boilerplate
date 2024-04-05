@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 
-class ListUserSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField()
+class ListUserSerializer(ModelSerializer):
+    links = SerializerMethodField()
 
     class Meta:
         model = User
@@ -17,8 +17,8 @@ class ListUserSerializer(serializers.ModelSerializer):
         }
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField()
+class UserProfileSerializer(ModelSerializer):
+    links = SerializerMethodField()
     class Meta:
         model = User
         #fields = ['id', 'name', 'username', 'email', 'phone_number' 'is_superuser', 'is_stuff']
@@ -30,8 +30,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         }
 
 
-class ShowUserSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField()
+class ShowUserSerializer(ModelSerializer):
+    links = SerializerMethodField()
     class Meta:
         model = User
         #fields = ['id', 'name', 'username', 'is_superuser', 'is_stuff']
