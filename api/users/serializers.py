@@ -40,14 +40,3 @@ class ProfileSerializer(ModelSerializer):
         #del self.fields['phone_number']
 
 
-class ShowUserSerializer(ModelSerializer):
-    links = SerializerMethodField()
-    class Meta:
-        model = User
-        #fields = ('id', 'name', 'username', 'is_superuser', 'is_stuff')
-        fields = ('id', 'username', 'is_superuser', 'is_staff', 'links')
-        
-    def get_links(self, obj):
-        return {
-            'avatar': None,
-        }

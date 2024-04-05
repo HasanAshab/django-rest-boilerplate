@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status
+from rest_framework import status
+from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +9,7 @@ from .pagination import UserCursorPagination
 from .serializers import ListUserSerializer, ProfileSerializer
 
 
-class UserViewSet(viewsets.ViewSet):
+class UserViewSet(ViewSet):
     lookup_field = 'username'
     permission_classes = [IsAuthenticated]
     pagination_class = UserCursorPagination
