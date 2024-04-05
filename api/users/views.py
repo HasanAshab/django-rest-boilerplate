@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from .pagination import UserCursorPagination
-from .serializers import ListUserSerializer, UserProfileSerializer, ShowUserSerializer
+from .serializers import ListUserSerializer, ProfileSerializer
 
 
 class UserViewSet(viewsets.ViewSet):
@@ -22,8 +22,8 @@ class UserViewSet(viewsets.ViewSet):
     
     def retrieve(self, request, username):
         user = get_object_or_404(User, username=username)
-        data = ShowUserSerializer(user).data
-        return Response(data)
+        data = ProfileSerializer(user, context={'request': request}).data
+        return Response({ 'data': data })
     
     def destroy(self, request, username):
         User.objects.filter(username=username).delete()
@@ -31,8 +31,8 @@ class UserViewSet(viewsets.ViewSet):
     
     @action(detail=False, url_path='me')
     def profile(self, request):
-        profile = UserProfileSerializer(request.user).data
-        return Response(profile)
+        profile = ProfileSerializer(request.user, context={'request': request}).data
+        return Response({ 'data': profile })
     
     @action(detail=False, methods=['patch'], url_path='me')
     def updateProfile(self, request):
