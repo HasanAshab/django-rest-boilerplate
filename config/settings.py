@@ -148,6 +148,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 15,
 }
 
+KNOX_TOKEN_MODEL = 'knox.AuthToken'
+
 REST_KNOX = {
-    'AUTH_HEADER_PREFIX': 'Bearer'
+    'AUTH_HEADER_PREFIX': 'Bearer',
 }

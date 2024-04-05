@@ -9,7 +9,14 @@ from knox.views import LoginView as KnoxLoginView
 
 class LoginView(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
-
+    
+    def get_post_response(self, request, token, instance):
+        data = self.get_post_response_data(request, token, instance)
+        return Response({
+            'message': 'Logged in successfully!',
+            'data': { 'token': data }
+        })
+        
     def post(self, request, format=None): 
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -17,5 +24,5 @@ class LoginView(KnoxLoginView):
         if not user:
             raise AuthenticationFailed()
         login(request, user)
-        return super(LoginView, self).post(request, format)
+        return super().post(request, format)
     
