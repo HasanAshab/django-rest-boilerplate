@@ -139,10 +139,13 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
     # Auth
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api.common.auth.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
     ),
     # Pagination
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
     'PAGE_SIZE': 15,
 }
 
+REST_KNOX = {
+    'AUTH_HEADER_PREFIX': 'Bearer'
+}
