@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'knox',
     'api',
+    'api.users'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -106,6 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# User Model
+AUTH_USER_MODEL = "users.User"
 
 
 # Internationalization
