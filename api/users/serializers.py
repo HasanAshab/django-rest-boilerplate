@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from .models import User
 
 
 class ListUserSerializer(ModelSerializer):
@@ -19,11 +19,11 @@ class ListUserSerializer(ModelSerializer):
 
 class ProfileSerializer(ModelSerializer):
     links = SerializerMethodField()
+    
     class Meta:
         model = User
-        #fields = ('id', 'name', 'username', 'email', 'phone_number' 'is_superuser', 'is_stuff')
-        fields = ('id', 'username', 'email', 'is_superuser', 'is_staff', 'links')
-     
+        fields = ('id', 'name', 'username', 'email', 'phone_number', 'is_superuser', 'is_staff', 'links')
+
     def __init__(self, *args, **kwargs):
         super(ProfileSerializer, self).__init__(*args, **kwargs)
         request = self.context.get('request')
@@ -32,11 +32,11 @@ class ProfileSerializer(ModelSerializer):
 
     def get_links(self, obj):
         return {
-            'avatar': None,
+            'avatar': obj.avatar.url if obj.avatar else None,
         }
         
     def remove_sensetive_fields(self):
         del self.fields['email']
-        #del self.fields['phone_number']
+        del self.fields['phone_number']
 
 
