@@ -28,8 +28,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super(ProfileSerializer, self).__init__(*args, **kwargs)
-        request = self.context.get('request')
-        if not request or not self.instance == request.user:
+        user = self.context.get('user')
+        if not self.instance == user:
             self.remove_sensetive_fields()
 
     def remove_sensetive_fields(self):

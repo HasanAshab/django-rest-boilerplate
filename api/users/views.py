@@ -24,8 +24,8 @@ class UserViewSet(ViewSet):
     
     def retrieve(self, request, username):
         user = get_object_or_404(User, username=username)
-        data = ProfileSerializer(user, context={'request': request}).data
-        return Response({ 'data': data })
+        profile = ProfileSerializer(user, context={'user': request.user}).data
+        return Response({'data': profile})
     
     def destroy(self, request, username):
         User.objects.filter(username=username).delete()
@@ -33,8 +33,8 @@ class UserViewSet(ViewSet):
     
     @action(detail=False, url_path='me')
     def profile(self, request):
-        profile = ProfileSerializer(request.user, context={'request': request}).data
-        return Response({ 'data': profile })
+        profile = ProfileSerializer(request.user, context={'user': request.user}).data
+        return Response({'data': profile})
     
     @profile.mapping.patch
     def updateProfile(self, request):
