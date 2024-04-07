@@ -10,7 +10,7 @@ class RegisterSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'username', 'password', 'avatar')
-        extra_kwargs = {'email': {'required': True}}
+        extra_kwargs = {'email': {'required': True, 'allow_blank': False}}
         
     def create(self, validated_data):
         password = validated_data.pop('password')

@@ -1,3 +1,4 @@
+from http import HTTPMethod
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
@@ -35,11 +36,16 @@ class UserViewSet(ViewSet):
         profile = ProfileSerializer(request.user, context={'request': request}).data
         return Response({ 'data': profile })
     
-    @action(detail=False, methods=['patch'], url_path='me')
+    @profile.mapping.patch
     def updateProfile(self, request):
-        return Response('')
+        serializer = ProfileSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'message': 'Profile updated!'
+        })
 
-    @action(detail=True, methods=['patch'], url_path='admin')
+    @action(detail=True, methods=[HTTPMethod.PATCH], url_path='admin')
     def makeAdmin(self, request, username):
         User.objects.filter(username=username).update(is_superuser=True)
         return Response({
