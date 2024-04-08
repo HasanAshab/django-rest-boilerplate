@@ -1,13 +1,18 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from api.auth.mixins import HasPolicy
 from .policies import UserPolicy
 
 class UserModel(AbstractUser, HasPolicy):
-    name = models.CharField(max_length=255, null=True)
-    phone_number = models.CharField(max_length=20, null=True)
-    avatar = models.FileField(upload_to="uploads/", null=True)
+    first_name = None
+    last_name = None
+    email = models.EmailField(_('Email Address'), unique=True)
+    is_email_verified = models.BooleanField(default=False)
+    name = models.CharField(_('Name'), max_length=255, null=True)
+    phone_number = models.CharField(_('Phone Number'), max_length=20, null=True)
+    avatar = models.FileField(_('Avatar'), upload_to="uploads/", null=True)
     _policy = UserPolicy
 
 

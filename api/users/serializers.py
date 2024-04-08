@@ -22,23 +22,28 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'username', 'email', 'phone_number', 'avatar', 'is_superuser', 'is_staff', 'links')
-        read_only_fields = ('is_superuser', 'is_staff', 'phone_number')
+        exclude = ('password', 'groups', 'user_permissions')
+        read_only_fields = ('date_joined', 'last_login', 'is_email_verified', 'is_active', 'is_superuser', 'is_staff', 'phone_number')
         extra_kwargs = {'avatar': {'read_only': False, 'write_only': True}}
 
     def __init__(self, *args, **kwargs):
         super(ProfileSerializer, self).__init__(*args, **kwargs)
         user = self.context.get('user')
-        if not self.instance == user:
+        if not self.instance != user:
             self.remove_sensetive_fields()
 
     def remove_sensetive_fields(self):
         del self.fields['email']
+        del self.fields['is_email_verified']
         del self.fields['phone_number']
+        del self.fields['last_login']
     
     def get_links(self, obj):
         return {
             'avatar': obj.avatar.url if obj.avatar else None,
         }
 
-
+    def update(self, user, data):
+        if 'email' in data and data['email'] != user.email:
+            user.is_email_verified = False
+        return super().update(user, data)

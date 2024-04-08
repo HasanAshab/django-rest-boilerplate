@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'knox',
     'api',
     'api.common',
+    'api.auth',
     'api.users',
 ]
 
@@ -91,6 +92,15 @@ DATABASES = {
     }
 }
 
+# Mail
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = "/tmp/app-messages"
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

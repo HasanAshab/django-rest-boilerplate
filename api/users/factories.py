@@ -8,9 +8,9 @@ class UserFactory(DjangoModelFactory):
         model = UserModel
    
     email = Faker('email')
+    is_email_verified = True
     username = Faker('user_name')
     password = make_password('password')
     name = Faker('name')
     # phone_number = Faker('phone_number')
 #     avatar = Faker('file_path', extension='jpg')
-# 

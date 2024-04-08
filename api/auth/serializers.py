@@ -12,9 +12,9 @@ class RegisterSerializer(ModelSerializer):
         fields = ('email', 'username', 'password', 'avatar')
         extra_kwargs = {'email': {'required': True, 'allow_blank': False}}
         
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User(**validated_data)
+    def create(self, data):
+        password = data.pop('password')
+        user = User(**data)
         user.set_password(password)
         user.save()
         return user
