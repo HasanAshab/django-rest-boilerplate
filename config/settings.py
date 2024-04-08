@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'knox',
     'api',
-    'api.users'
+    'api.common',
+    'api.users',
 ]
 
 
