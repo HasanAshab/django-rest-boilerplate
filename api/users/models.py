@@ -1,15 +1,17 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
+from api.auth.mixins import HasPolicy
+from .policies import UserPolicy
 
-
-class UserModel(AbstractUser):
+class UserModel(AbstractUser, HasPolicy):
     name = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=20, null=True)
     avatar = models.FileField(upload_to="uploads/", null=True)
+    _policy = UserPolicy
 
 
-class UserLaizyLoader:
+class LazyLoadedUserModel:
     __model = None
     
     @property
@@ -28,4 +30,4 @@ class UserLaizyLoader:
         self.__model = get_user_model()
 
 
-User = UserLaizyLoader()
+User = LazyLoadedUserModel()

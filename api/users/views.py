@@ -9,10 +9,14 @@ from .models import User
 from .pagination import UserCursorPagination
 from .serializers import ListUserSerializer, ProfileSerializer
 
+#from .factories import UserFactory
+#UserFactory.create_batch(10)
+
+
 
 class UserViewSet(ViewSet):
     lookup_field = 'username'
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     pagination_class = UserCursorPagination
 
     def list(self, request):
@@ -28,7 +32,9 @@ class UserViewSet(ViewSet):
         return Response({'data': profile})
     
     def destroy(self, request, username):
-        User.objects.filter(username=username).delete()
+        user = get_object_or_404(User, username=username)
+        request.user.assert_can('delete', user)
+        user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     @action(detail=False, url_path='me')
