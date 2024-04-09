@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.core.mail import send_mail as dj_send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from .client_route import ClientRoute
 
 
 def send_mail(user, subject, message=None, fail_silently=None, template=None):
@@ -17,3 +19,8 @@ def send_mail(user, subject, message=None, fail_silently=None, template=None):
         recipient_list=[user.email],
         fail_silently=fail_silently
     )
+    
+    
+client_route = ClientRoute({
+    'domain': settings.CLIENT_DOMIAN
+})

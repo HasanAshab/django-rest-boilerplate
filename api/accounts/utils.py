@@ -1,8 +1,13 @@
-from api.common.utils import send_mail
+from api.common.utils import send_mail, client_route
+from .tokens import verification_token
 
 
 def send_verification_mail(user):
-    url = 'jd'
+    token = verification_token.make_token(user)
+    url = client_route.reverse('email-verification', {
+      'id': user.id,
+      'token': token
+    })
     template = {
         'path': 'email/verification.html',
         'context': {'url': url}

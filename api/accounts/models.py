@@ -1,3 +1,4 @@
+from functools import cached_property
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -17,22 +18,15 @@ class UserModel(AbstractUser, HasPolicy):
 
 
 class LazyLoadedUserModel:
-    __model = None
-    
-    @property
+    @cached_property
     def model(self):
-        if not self.__model:
-            self.refresh()
-        return self.__model
-    
+        return get_user_model()
+
     def __call__(self, **kargs):
         return self.model(**kargs)
     
     def __getattr__(self, name):
         return getattr(self.model, name)
     
-    def refresh(self):
-        self.__model = get_user_model()
-
 
 User = LazyLoadedUserModel()

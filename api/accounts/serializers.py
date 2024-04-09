@@ -76,7 +76,6 @@ class ProfileSerializer(serializers.ModelSerializer, ProtectedFieldSerializer):
         }
 
     def update(self, user, data):
-        print(data)
         if 'email' in data and data['email'] != user.email:
             user.is_email_verified = False
         return super().update(user, data)

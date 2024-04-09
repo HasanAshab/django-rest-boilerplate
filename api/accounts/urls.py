@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
+from api.common.utils import client_route
 from api.accounts import views
 
 
@@ -12,3 +13,8 @@ urlpatterns = [
     path('auth/login/', views.LoginView.as_view(), name='login')
 ]
 
+
+client_route.add_paths({
+  'email-verification': '/email/verify/{id}/{token}',
+  'password-reset': '/password/reset/{id}/{token}',
+})

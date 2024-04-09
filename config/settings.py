@@ -170,8 +170,12 @@ REST_FRAMEWORK = {
 }
 
 # Knox (For Auth Token Management)
-KNOX_TOKEN_MODEL = 'knox.AuthToken'
-
 REST_KNOX = {
     'AUTH_HEADER_PREFIX': 'Bearer',
 }
+
+KNOX_TOKEN_MODEL = 'knox.AuthToken'
+
+
+# Client (Frontend) Url Manager 
+CLIENT_DOMIAN = 'localhost:5000'
