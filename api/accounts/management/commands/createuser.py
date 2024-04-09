@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from api.users.factories import UserFactory
+from api.accounts.factories import UserFactory
 from knox.views import LoginView
 
 class R():

@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from api.auth.mixins import HasPolicy
+from .mixins import HasPolicy
 from .policies import UserPolicy
 
 class UserModel(AbstractUser, HasPolicy):

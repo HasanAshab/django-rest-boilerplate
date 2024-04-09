@@ -1,0 +1,26 @@
+Content-Type: multipart/alternative;
+ boundary="===============6930984933029853503=="
+MIME-Version: 1.0
+Subject: Verify Email Address!
+From: foo@bar.com
+To: hao@g.com
+Date: Tue, 09 Apr 2024 08:00:55 -0000
+Message-ID: <171264965532.9219.13519409694005700375@localhost>
+
+--===============6930984933029853503==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+Verify your email
+here is the url: 
+--===============6930984933029853503==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<h1>Verify your email</h1>
+here is the url: <a href="jd"></a>
+--===============6930984933029853503==--
+
+-------------------------------------------------------------------------------
