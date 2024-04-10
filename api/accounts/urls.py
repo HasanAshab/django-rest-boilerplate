@@ -10,7 +10,9 @@ router.register('users', views.UserViewSet, basename='user')
 urlpatterns = [
     path('', include(router.urls)),
     path('auth/register/', views.RegisterView.as_view(), name='register'),
-    path('auth/login/', views.LoginView.as_view(), name='login')
+    path('auth/login/', views.LoginView.as_view(), name='login'),
+    path('auth/verification/', views.EmailVerificationView.as_view(), name='verification'),
+    path('auth/verification/notification', views.SendEmailVerificationNotificationView.as_view(), name='verification.send')
 ]
 
 

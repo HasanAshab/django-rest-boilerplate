@@ -1,11 +1,14 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from six import text_type
+from .exceptions import InvalidTokenException
 
-class VerificationTokenGenerator(PasswordResetTokenGenerator):
+
+class TokenGenerator(PasswordResetTokenGenerator):
+    def is_valid(self, user, token):
+        if not self.check_token(user, token):
+            raise InvalidTokenException
+
+class VerificationTokenGenerator(TokenGenerator):
     def _make_hash_value(self, user, timestamp):
-        return (
-            text_type(user.pk) + text_type(timestamp) +
-            text_type(user.is_email_verified)
-        )
+        return f'{user.pk}{timestamp}{user.is_email_verified}'
         
 verification_token = VerificationTokenGenerator()

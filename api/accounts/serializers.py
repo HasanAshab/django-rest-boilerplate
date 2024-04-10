@@ -1,10 +1,13 @@
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer as BaseAuthTokenSerializer
 from api.common.serializers import ProtectedFieldSerializer
+from .utils import send_verification_mail
 from .models import User
+from .tokens import verification_token
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -24,9 +27,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class AuthTokenSerializer(BaseAuthTokenSerializer):
     
-    def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
         
         if username and password:
             user = authenticate(
@@ -38,10 +41,33 @@ class AuthTokenSerializer(BaseAuthTokenSerializer):
             msg = _('Must include "username" and "password".')
             raise serializers.ValidationError(msg, code='authorization')
 
-        attrs['user'] = user
-        return attrs 
-        
-        
+        data['user'] = user
+        return data 
+
+class SendEmailVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    def save(self):
+        email = self.validated_data['email']
+        user = User.object.get(
+            email=email,
+            is_email_verified=False
+        )
+        if user:
+            send_verification_mail(user)
+
+class EmailVerificationSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    token = serializers.CharField()
+    
+    def save(self):
+        id = self.validated_data['id']
+        token = self.validated_data['token']
+        user = get_object_or_404(User, pk=id)
+        verification_token.verify(user, token)
+        user.is_email_verified = True
+        return user.save()
+
 class ListUserSerializer(serializers.ModelSerializer):
     links = serializers.SerializerMethodField()
 

@@ -12,8 +12,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from knox.views import LoginView as KnoxLoginView
 from .models import User
 from .pagination import UserCursorPagination
-from .serializers import RegisterSerializer, AuthTokenSerializer, ListUserSerializer, ProfileSerializer
+from .serializers import RegisterSerializer, AuthTokenSerializer, EmailVerificationSerializer, ListUserSerializer, ProfileSerializer
 from .utils import send_verification_mail
+from .tokens import verification_token
 
 
 class RegisterView(APIView):
@@ -62,8 +63,22 @@ class LoginView(KnoxLoginView):
             raise AuthenticationFailed()
         login(request, user)
         return super().post(request, format)
+   
     
+class SendEmailVerificationNotificationView(APIView):
+    def post(self, request):
+        serializer = SendEmailVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        Response('Verification link sent to email!', status=status.HTTP_202_ACCEPTED)
 
+class EmailVerificationView(APIView):
+    def post(self, request):
+        serializer = EmailVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response('Email verified successfully!')
+  
 class UserViewSet(ViewSet):
     lookup_field = 'username'
     permission_classes = (IsAuthenticated,)

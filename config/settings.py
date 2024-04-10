@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 '''
 
 from pathlib import Path
+from datetime import timedelta
 from corsheaders.defaults import default_headers
+from rest_framework.settings import api_settings
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -171,9 +173,9 @@ REST_FRAMEWORK = {
 
 # Knox (For Auth Token Management)
 REST_KNOX = {
-    'AUTH_HEADER_PREFIX': 'Bearer',
+  'TOKEN_TTL': timedelta(days=20),
+  'TOKEN_LIMIT_PER_USER': None,
 }
-
 KNOX_TOKEN_MODEL = 'knox.AuthToken'
 
 
