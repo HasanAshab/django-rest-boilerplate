@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 from api.common.utils import client_route
-from api.accounts import views
+from . import views
 
 
 router = SimpleRouter()
@@ -18,7 +18,7 @@ urlpatterns = [
 ]
 
 
-client_route.add_paths({
+client_route.update_paths({
   'email-verification': '/email/verify/{id}/{token}',
   'password-reset': '/password/reset/{id}/{token}',
 })

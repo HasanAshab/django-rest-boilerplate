@@ -5,7 +5,7 @@ class ClientRoute:
         self.config = config
         self.url_paths = {}
 
-    def add_paths(self, paths):
+    def update_paths(self, paths):
         self.url_paths.update(paths)
 
     def url(self, path=''):
