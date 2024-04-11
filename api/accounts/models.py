@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from .mixins import HasPolicy
 from .policies import UserPolicy
 
+
 class UserModel(AbstractUser, HasPolicy):
     first_name = None
     last_name = None
@@ -13,7 +14,7 @@ class UserModel(AbstractUser, HasPolicy):
     is_email_verified = models.BooleanField(default=False)
     name = models.CharField(_('Name'), max_length=255, null=True)
     phone_number = models.CharField(_('Phone Number'), max_length=20, null=True)
-    avatar = models.FileField(_('Avatar'), upload_to="uploads/", null=True)
+    avatar = models.ImageField(_('Avatar'), upload_to="uploads/avatars/", max_length=100, null=True)
     _policy = UserPolicy
 
 

@@ -2,7 +2,7 @@ from http import HTTPMethod
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.urls import reverse
-from rest_framework import status, permissions
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -10,24 +10,25 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from knox.views import LoginView as KnoxLoginView
-from .models import User
-from .pagination import UserCursorPagination
-from .serializers import RegisterSerializer, AuthTokenSerializer, EmailVerificationSerializer, ListUserSerializer, ProfileSerializer
 from .utils import send_verification_mail
 from .tokens import verification_token
+from .models import User
+from .permissions import IsEmailVerified
+from .signals import registered
+from .pagination import UserCursorPagination
+from .serializers import RegisterSerializer, AuthTokenSerializer, EmailVerificationSerializer, ListUserSerializer, ProfileSerializer
 
 
 class RegisterView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
     def get_post_response_headers(self, user):
-        profile_url = reverse('user-detail', kwargs={'username': user.get('username')})
+        profile_url = reverse('user-detail', kwargs={'username': user.username})
         return { 'location': profile_url }
 
     def get_post_response_data(self, user):
+        data = ProfileSerializer(user, context={'user': user}).data
         return {
             'message': 'Verification email sent!',
-            'data': user
+            'data': data
         }
 
     def get_post_response(self, user):
@@ -40,13 +41,17 @@ class RegisterView(APIView):
     def post(self, request, format=None): 
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        user = serializer.data
+        user = serializer.save()
+        registered.send(
+            sender=self.__class__,
+            user=user,
+            method='internal'
+        )
         return self.get_post_response(user)
 
 
 class LoginView(KnoxLoginView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = []
     
     def get_post_response(self, request, token, instance):
         data = self.get_post_response_data(request, token, instance)
@@ -55,7 +60,7 @@ class LoginView(KnoxLoginView):
             'data': { 'token': data }
         })
         
-    def post(self, request, format=None): 
+    def post(self, request, format=None):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
@@ -81,7 +86,7 @@ class EmailVerificationView(APIView):
   
 class UserViewSet(ViewSet):
     lookup_field = 'username'
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsEmailVerified)
     pagination_class = UserCursorPagination
 
     def list(self, request):
@@ -108,7 +113,7 @@ class UserViewSet(ViewSet):
         return Response({'data': profile})
     
     @profile.mapping.patch
-    def updateProfile(self, request):
+    def update_profile(self, request):
         serializer = ProfileSerializer(request.user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -123,7 +128,7 @@ class UserViewSet(ViewSet):
         })
 
     @action(detail=True, methods=[HTTPMethod.PATCH], url_path='admin')
-    def makeAdmin(self, request, username):
+    def make_admin(self, request, username):
         User.objects.filter(username=username).update(is_superuser=True)
         return Response({
             'message': 'Admin role granted to the user.'

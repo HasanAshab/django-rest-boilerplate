@@ -20,6 +20,7 @@ from environ import Env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_ROOT = BASE_DIR / 'static'
 # Initialise environment variables
 env = Env()
 Env.read_env(BASE_DIR / '.env')
@@ -174,12 +175,14 @@ REST_FRAMEWORK = {
     # Pagination
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
     'PAGE_SIZE': 15,
+    # Test
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 # Knox (For Auth Token Management)
 REST_KNOX = {
   'TOKEN_TTL': timedelta(days=20),
-  'TOKEN_LIMIT_PER_USER': None,
+  'AUTH_HEADER_PREFIX': 'Bearer',
 }
 KNOX_TOKEN_MODEL = 'knox.AuthToken'
 

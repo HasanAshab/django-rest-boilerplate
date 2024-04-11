@@ -12,7 +12,9 @@ urlpatterns = [
     path('auth/register/', views.RegisterView.as_view(), name='register'),
     path('auth/login/', views.LoginView.as_view(), name='login'),
     path('auth/verification/', views.EmailVerificationView.as_view(), name='verification'),
-    path('auth/verification/notification', views.SendEmailVerificationNotificationView.as_view(), name='verification.send')
+    path('auth/verification/notification', views.SendEmailVerificationNotificationView.as_view(), name='send-verification')
+    #path('auth/password/forgot', views.ForgotPasswordView.as_view(), name='forgot-password'),
+    #path('auth/password/reset', views.ResetPasswordView.as_view(), name='reset-password')
 ]
 
 
