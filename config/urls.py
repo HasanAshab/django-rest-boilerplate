@@ -1,10 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.accounts.models import User
+from django.http import JsonResponse
 
-print(list(User.objects.all())[1].email)
 
 urlpatterns = [
-    path('api/auth/', include('dj_rest_auth.urls')),
+    path('api/auth/', include('api.authentication.urls')),
     path('api/admin/', admin.site.urls),
 ]
+
+
+def handler404(request, exception=None):
+    return JsonResponse({'message': 'Page not found'}, status=404)

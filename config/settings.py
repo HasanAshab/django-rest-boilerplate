@@ -17,12 +17,10 @@ from rest_framework.settings import api_settings
 from environ import Env
 
 
+SITE_ID = 1  
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-
-SITE_ID = 1  
 
 # Initialise environment variables
 env = Env()
@@ -38,7 +36,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -55,12 +53,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'dj_rest_auth',
     'knox',
-    'api.common',
-    'api.accounts',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    'api.common',
+    'api.authentication',
 ]
 
 
@@ -115,8 +113,7 @@ DATABASES = {
 }
 
 # Mail
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR / 'tmp/emails-messages'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
@@ -126,7 +123,7 @@ EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = 'foo@bar.com'
 
 # User Model
-AUTH_USER_MODEL = 'accounts.UserModel'
+#AUTH_USER_MODEL = 'accounts.UserModel'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -185,7 +182,8 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
     # Auth
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'knox.auth.TokenAuthentication',
+        #'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     # Exception
     'EXCEPTION_HANDLER': 'api.common.exceptions.handler',
@@ -204,8 +202,24 @@ REST_KNOX = {
 KNOX_TOKEN_MODEL = 'knox.AuthToken'
 
 
-# Allauth
+# All-Auth 
+ACCOUNT_ADAPTER = 'api.authentication.adapter.AccountAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_CHANGE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_NOTIFICATIONS = True
+
+ACCOUNT_USERNAME_MIN_LENGTH=3
+ACCOUNT_RATE_LIMITS = True
+
+# DJ-Rest-Auth
+REST_AUTH = {
+   # 'TOKEN_MODEL': 'knox.models.AuthToken',
+   # 'TOKEN_SERIALIZER': 'api.authentication.serializers.TokenSerializer',
+    'USER_DETAILS_SERIALIZER': 'api.authentication.serializers.UserDetailsSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'api.authentication.serializers.PasswordResetSerializer',
+}
 
 
 # Client (Frontend) Url Manager 

@@ -18,16 +18,20 @@ class UserModel(AbstractUser, HasPolicy):
     _policy = UserPolicy
 
 
-class LazyLoadedUserModel:
+class LazyLoadedObj:
+    def __init__(self, obj_creator: callable):
+        self.create_obj = obj_creator
+    
     @cached_property
-    def model(self):
-        return get_user_model()
+    def _target_obj(self):
+        return self.create_obj()
+
 
     def __call__(self, **kargs):
-        return self.model(**kargs)
+        return self._target_obj(**kargs)
     
-    def __getattr__(self, name):
-        return getattr(self.model, name)
+    def __getattr__(self, name: str):
+        return getattr(self._target_obj, name)
     
 
-User = LazyLoadedUserModel()
+User = LazyLoadedObj(get_user_model)
