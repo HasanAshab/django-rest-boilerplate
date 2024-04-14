@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 '''
-
+import os
 from pathlib import Path
 from datetime import timedelta
 from corsheaders.defaults import default_headers
@@ -23,8 +23,9 @@ SITE_ID = 1
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialise environment variables
+DEFAULT_ENV_FILE = '.env'
 env = Env()
-Env.read_env(BASE_DIR / '.env')
+Env.read_env(BASE_DIR / os.environ.get('ENV_FILE', DEFAULT_ENV_FILE))
 
 
 # Quick-start development settings - unsuitable for production
