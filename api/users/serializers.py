@@ -21,12 +21,8 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
 class ProfileSerializer(DefaultProfileSerializer, UserLinksSerializerMixin):
     
     class Meta(DefaultProfileSerializer.Meta):
-        extra_fields = DefaultProfileSerializer.Meta.extra_fields 
-        extra_fields.remove('first_name')
-        extra_fields.remove('last_name')
-        extra_fields.extend(['is_email_verified', 'name', 'phone_number', 'avatar', 'date_joined', 'is_superuser', 'is_staff', 'links'])
-        fields = ('pk', *extra_fields)
-        read_only_fields = ('date_joined', 'last_login', 'is_email_verified', 'is_active', 'is_superuser', 'is_staff', 'phone_number')
+        fields = ('id', 'email', 'is_email_verified', 'username', 'name', 'phone_number', 'avatar', 'date_joined', 'is_superuser', 'is_staff', 'links')
+        read_only_fields = ('date_joined', 'last_login', 'is_email_verified', 'is_active', 'phone_number')
         extra_kwargs = {'avatar': {'read_only': False, 'write_only': True}}
     
     def _change_email(self, user, new_email):
@@ -64,4 +60,5 @@ class ListUserSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
 class UserDetailsSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
     class Meta:
         model = User
-        exclude = ('password', 'groups', 'user_permissions', 'email', 'phone_number', 'avatar', 'last_login')
+        fields = ('id', 'username', 'name', 'date_joined', 'is_superuser', 'is_staff', 'links')
+        read_only_fields = ('username', 'name', 'date_joined')

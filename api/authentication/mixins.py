@@ -4,7 +4,7 @@ from rest_framework.exceptions import PermissionDenied
 class HasPolicy():
     @property
     def _policy(self):
-        raise Exception(f'Policy class not registered for model: "{self.__class__.__name__}" \n Set it as "_policy" attribute')
+        raise Exception(f'Policy class instance not registered for model: "{self.__class__.__name__}" \n Set it as "_policy" attribute')
     
     def can(self, action, obj):
         handler = getattr(self._policy, action)

@@ -14,7 +14,7 @@ class UserModel(AbstractUser, HasPolicy):
     name = models.CharField(_('Name'), max_length=255, null=True)
     phone_number = models.CharField(_('Phone Number'), max_length=20, null=True)
     avatar = models.ImageField(_('Avatar'), upload_to="uploads/avatars/", max_length=100, null=True)
-    _policy = UserPolicy
+    _policy = UserPolicy()
 
     @property
     def is_email_verified(self):
