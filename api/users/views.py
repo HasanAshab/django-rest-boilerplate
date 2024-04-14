@@ -1,13 +1,16 @@
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from allauth.account.models import EmailAddress
 from dj_rest_auth.views import (
     UserDetailsView as ProfileView,
     PasswordChangeView as DefaultPasswordChangeView
 )
+from api.common.response import APIResponse
 from .models import User
 from .pagination import UserCursorPagination
-from .serializers import ListUserSerializer, UserDetailsSerializer
+from .serializers import ListUserSerializer, UserDetailsSerializer, PhoneNumberSerializer
 
 
 class UsersView(ListAPIView):
@@ -77,9 +80,18 @@ class PasswordChangeView(DefaultPasswordChangeView):
         return super().post(*args, **kwargs)
 
 
-class PhoneNumberView(UpdateAPIView, DestroyAPIView):
+class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
     #serializer_class = PhoneNumberSerializer
     
     def get_object(self):
         return self.request.user
+    
+    def patch(self, request):
+        pass
+    
+    def delete(self, request):
+        user = self.get_object()
+        user.phone_number = None
+        user.save()
+        return APIResponse(status=status.HTTP_204_NO_CONTENT)

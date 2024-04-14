@@ -40,3 +40,10 @@ class UserDetailsSerializer(serializers.ModelSerializer, UserLinksSerializerMixi
         model = User
         fields = ('id', 'username', 'name', 'date_joined', 'is_superuser', 'is_staff', 'links')
         read_only_fields = ('username', 'name', 'date_joined')
+
+class PhoneNumberSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ('phone_number',)
+    
