@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'api.common',
     'api.authentication',
+    'api.users',
 ]
 
 
@@ -123,7 +124,7 @@ EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = 'foo@bar.com'
 
 # User Model
-#AUTH_USER_MODEL = 'accounts.UserModel'
+AUTH_USER_MODEL = 'users.UserModel'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -217,7 +218,7 @@ ACCOUNT_RATE_LIMITS = True
 REST_AUTH = {
    # 'TOKEN_MODEL': 'knox.models.AuthToken',
    # 'TOKEN_SERIALIZER': 'api.authentication.serializers.TokenSerializer',
-    'USER_DETAILS_SERIALIZER': 'api.authentication.serializers.UserDetailsSerializer',
+    'USER_DETAILS_SERIALIZER': 'api.users.serializers.ProfileSerializer',
     'PASSWORD_RESET_SERIALIZER': 'api.authentication.serializers.PasswordResetSerializer',
 }
 

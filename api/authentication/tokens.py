@@ -3,7 +3,7 @@ from .exceptions import InvalidTokenException
 
 
 class TokenGenerator(PasswordResetTokenGenerator):
-    def is_valid(self, user, token):
+    def verify(self, user, token):
         if not self.check_token(user, token):
             raise InvalidTokenException
 

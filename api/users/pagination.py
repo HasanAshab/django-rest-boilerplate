@@ -4,4 +4,4 @@ from api.common.pagination import DynamicLimitPagination
 
 
 class UserCursorPagination(DynamicLimitPagination, CursorPagination):
-    ordering = 'username'
+    ordering = 'date_joined'

@@ -5,7 +5,6 @@ from .models import UserModel
 
 class UserFactory(factory.django.DjangoModelFactory):
     email = Faker('email')
-    is_email_verified = True
     username = Faker('user_name')
     name = Faker('name')
     plain_password = 'password'

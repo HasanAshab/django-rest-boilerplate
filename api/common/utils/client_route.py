@@ -1,6 +1,8 @@
-from urllib.parse import urljoin, urlencode
+from urllib.parse import urljoin
+from django.conf import settings
 
-class ClientRoute:
+
+class ClientRouteManager:
     def __init__(self, config):
         self.config = config
         self.url_paths = {}
@@ -22,3 +24,7 @@ class ClientRoute:
 
     def reverse(self, name, data=None):
         return self.url(self.reverse_path(name, data))
+    
+client_route = ClientRouteManager({
+    'domain': settings.CLIENT_DOMIAN
+})
