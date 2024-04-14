@@ -10,7 +10,7 @@ from api.authentication.permissions import IsEmailVerified
 from .models import User
 from .pagination import UserCursorPagination
 from .serializers import ListUserSerializer, UserDetailsSerializer
-from rest_framework.generics import ListAPIView, RetrieveDestroyAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from dj_rest_auth.views import PasswordChangeView as DefaultPasswordChangeView
 
 
@@ -21,7 +21,7 @@ class UsersView(ListAPIView):
     serializer_class = ListUserSerializer
     pagination_class = UserCursorPagination
     
-class UserDetailsView(RetrieveDestroyAPIView):
+class UserDetailsView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
     lookup_field = 'username'
@@ -29,21 +29,10 @@ class UserDetailsView(RetrieveDestroyAPIView):
     
     def perform_destroy(self, instance):
         self.request.user.assert_can('delete', instance)
-
-
-class UserViewSet(ViewSet):
-    lookup_field = 'username'
-    permission_classes = (IsAuthenticated, IsEmailVerified)
-    pagination_class = UserCursorPagination
     
-    @action(detail=True, methods=[HTTPMethod.PATCH], url_path='admin')
-    def make_admin(self, request, username):
-        User.objects.filter(username=username).update(is_superuser=True)
-        return Response({
-            'message': 'Admin role granted to the user.'
-        })
-        
-        
+    def perform_update(self, instance):
+        self.request.user.assert_can('change_role', instance)
+
 class PasswordChangeView(DefaultPasswordChangeView):
     http_method_names = ['patch']
     
