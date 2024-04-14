@@ -1,5 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListAPIView, UpdateDestroyAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView, DestroyAPIView
+from allauth.account.models import EmailAddress
 from dj_rest_auth.views import (
     UserDetailsView as ProfileView,
     PasswordChangeView as DefaultPasswordChangeView
@@ -17,41 +18,39 @@ class UsersView(ListAPIView):
     
    
 class ProfileView(ProfileView):
-    def _check_role_change_permissions():
+    def perform_update(self, serializer):
+        self._check_role_change_permissions()
+        self._perform_email_change()
+        serializer.save()
+    
+    def _check_role_change_permissions(self):
         data = self.request.data
         user = self.get_object()
         if 'is_staff' in data:
             user.assert_can('change_role_of_staff', user)
         if 'is_superuser' in data:
             user.assert_can('change_role_of_superuser', user)
-        
-    def _change_email(self, new_email):
+       
+    def _perform_email_change(self):
+        user = self.get_object()
+        new_email = self.request.data.pop('email', None)
+        if new_email and new_email != user.email:
+            email_address = self._change_email(new_email, commit=False)
+            email_address.send_confirmation(self.request, signup=False)
+
+    def _change_email(self, new_email, commit=False):
         user = self.request.user
         user.email = new_email
+        if commit:
+            user.save()
         email_address = EmailAddress.objects.get_primary(user)
         email_address.email = new_email
         email_address.verified = False
-        return email_address.save()
+        email_address.save()
+        return email_address
 
-    def _send_confirmation(self, email_address):
-        request = self.context.get('request')
-        if request:
-            email_address.send_confirmation(request, signup=False)
 
-    def perform_update(self, serializer):
-        self._check_role_change_permissions()
 
-        new_email = self.request.data.pop('email', None)
-        user = self.get_object()
-        if new_email and new_email != user.email:
-            email_address = self._change_email(new_email)
-        serializer.save()
-        
-        if email_address:
-            self._send_confirmation(email_address)
-
- 
-    
 class UserDetailsView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
@@ -78,9 +77,9 @@ class PasswordChangeView(DefaultPasswordChangeView):
         return super().post(*args, **kwargs)
 
 
-class PhoneNumberView(UpdateDestroyAPIView):
+class PhoneNumberView(UpdateAPIView, DestroyAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = PhoneNumberSerializer
+    #serializer_class = PhoneNumberSerializer
     
     def get_object(self):
         return self.request.user

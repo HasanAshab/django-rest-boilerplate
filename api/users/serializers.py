@@ -1,6 +1,5 @@
 from django.urls import reverse
 from rest_framework import serializers
-from allauth.account.models import EmailAddress
 from dj_rest_auth.serializers import UserDetailsSerializer as DefaultProfileSerializer
 from .models import User
 
@@ -25,27 +24,6 @@ class ProfileSerializer(DefaultProfileSerializer, UserLinksSerializerMixin):
         read_only_fields = ('date_joined', 'last_login', 'is_email_verified', 'is_active', 'phone_number')
         extra_kwargs = {'avatar': {'read_only': False, 'write_only': True}}
     
-    def _change_email(self, user, new_email):
-        user.email = new_email
-        user.save()
-        email_address = EmailAddress.objects.get_primary(user)
-        email_address.email = new_email
-        email_address.verified = False
-        return email_address.save()
-
-    def _send_confirmation(self, email_address):
-        request = self.context.get('request')
-        if request:
-            email_address.send_confirmation(request, signup=False)
-
-    def update(self, instance, validated_data):
-        new_email = validated_data.pop('email', None)
-        user = super().update(instance, validated_data)
-        if new_email and new_email != user.email:
-            email_address = self._change_email(user, new_email)
-            self._send_confirmation(email_address)
-        return user
-
 class ListUserSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
     
     class Meta:
