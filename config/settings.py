@@ -9,24 +9,22 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 '''
-import os
 from pathlib import Path
 from datetime import timedelta
 from corsheaders.defaults import default_headers
-from rest_framework.settings import api_settings
 from environ import Env
-
 
 SITE_ID = 1  
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialise environment variables
-DEFAULT_ENV_FILE = '.env'
-env = Env()
-Env.read_env(BASE_DIR / os.environ.get('ENV_FILE', DEFAULT_ENV_FILE))
 
+ENV_FILE = '.env'
+ENV_FILE_PATH = BASE_DIR / ENV_FILE
+
+Env.read_env(ENV_FILE_PATH)
+env = Env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
