@@ -80,15 +80,28 @@ class PasswordChangeView(DefaultPasswordChangeView):
         return super().post(*args, **kwargs)
 
 
+
 class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
-    #serializer_class = PhoneNumberSerializer
-    
+
     def get_object(self):
         return self.request.user
     
     def patch(self, request):
-        pass
+        serializer = PhoneNumberSerializer(request.user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        if 'otp' in serializer.validated_data:
+            return APIResponse('Phone number updated!') 
+        return APIResponse('Verification code sent to the phone number!', status=status.HTTP_202_ACCEPTED)
+#     
+#         await Otp.verify(code, phoneNumber)
+#     
+#         user.phoneNumber = phoneNumber
+#         await user.save()
+    
+    def put(self, request):
+        return self.patch(request)
     
     def delete(self, request):
         user = self.get_object()
