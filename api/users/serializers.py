@@ -17,7 +17,18 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
     def additional_links(self, user):
         return {}
 
-class ProfileSerializer(DefaultProfileSerializer, UserLinksSerializerMixin):
+class WrapSerializerDataMixin():
+    wrap = 'data'
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        links = data.pop('links')
+        return {
+            self.wrap: data,
+            'links': links
+        }
+
+class ProfileSerializer(UserLinksSerializerMixin, WrapSerializerDataMixin, DefaultProfileSerializer):
     class Meta(DefaultProfileSerializer.Meta):
         fields = ('id', 'email', 'is_email_verified', 'username', 'name', 'phone_number', 'avatar', 'date_joined', 'is_superuser', 'is_staff', 'links')
         read_only_fields = ('date_joined', 'last_login', 'is_email_verified', 'is_active', 'phone_number')
