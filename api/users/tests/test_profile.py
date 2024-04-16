@@ -42,14 +42,14 @@ class ProfileTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.user.is_email_verified, True)
     
-    def test_user_can_not_be_staff(self):
+    def test_can_not_be_staff(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.patch(self.url, {'is_staff': True}) 
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(self.user.is_staff, False)
     
-    def test_user_can_not_be_admin(self):
+    def test_can_not_be_admin(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.patch(self.url, {'is_superuser': True}) 
         
@@ -57,34 +57,39 @@ class ProfileTestCase(APITestCase):
         self.assertEqual(self.user.is_superuser, False)
 
     def test_staff_can_be_user(self):
-        user = UserFactory(staff=True)
-        self.client.force_authenticate(user=user)
+        staff = UserFactory(staff=True)
+        
+        self.client.force_authenticate(user=staff)
         response = self.client.patch(self.url, {'is_staff': False}) 
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.user.is_staff, False)
+        self.assertEqual(staff.is_staff, False)
     
     def test_staff_can_not_be_admin(self):
-        user = UserFactory(staff=True)
-        self.client.force_authenticate(user=user)
+        staff = UserFactory(staff=True)
+        
+        self.client.force_authenticate(user=staff)
         response = self.client.patch(self.url, {'is_superuser': True}) 
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(self.user.is_superuser, False)
+        self.assertEqual(staff.is_superuser, False)
         
     def test_admin_can_be_staff(self):
-        user = UserFactory(admin=True)
+        admin = UserFactory(admin=True)
         
-        self.client.force_authenticate(user=user)
+        self.client.force_authenticate(user=admin)
         response = self.client.patch(self.url, {'is_staff': True}) 
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(user.is_staff, True)
+        self.assertEqual(admin.is_staff, True)
     
     def test_admin_can_be_user(self):
-        user = UserFactory(admin=True)
-        self.client.force_authenticate(user=user)
-        response = self.client.patch(self.url, {'is_superuser': True}) 
+        admin = UserFactory(admin=True)
+        
+        self.client.force_authenticate(user=admin)
+        response = self.client.patch(self.url, {'is_superuser': False}) 
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.user.is_superuser, False)
+        self.assertEqual(admin.is_superuser, False)
+    
+    

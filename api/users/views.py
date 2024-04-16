@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.mixins import DestroyModelMixin
 from allauth.account.models import EmailAddress
 from dj_rest_auth.views import (
     UserDetailsView as ProfileView,
@@ -20,7 +21,10 @@ class UsersView(ListAPIView):
     pagination_class = UserCursorPagination
     
    
-class ProfileView(ProfileView):
+class ProfileView(ProfileView, DestroyModelMixin):
+    def delete(self, request):
+        return self.destroy(request)
+    
     def perform_update(self, serializer):
         self._check_role_change_permissions()
         self._perform_email_change()
@@ -61,7 +65,8 @@ class UserDetailsView(RetrieveUpdateDestroyAPIView):
     
     def perform_destroy(self, instance):
         self.request.user.assert_can('delete', instance)
-
+        instance.delete()
+        
     def perform_update(self, serializer):
         data = self.request.data
         user = self.get_object()
