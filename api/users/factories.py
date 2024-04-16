@@ -16,10 +16,23 @@ class UserFactory(factory.django.DjangoModelFactory):
         exclude = ('plain_password',)
         
     class Params:
+        admin = factory.Trait(
+            is_superuser=True
+        )
+        staff = factory.Trait(
+            is_staff=True
+        )
         has_phone_number = factory.Trait(
             phone_number=factory.Faker('phone_number')
         )
-        
+
+
     @factory.post_generation
     def setup_email(obj, create, extracted, **kwargs):  
-        EmailAddress.objects.create(user=obj, email=obj.email, verified=True, primary=True)
+        is_verified = not kwargs.get('unverified', False)
+        EmailAddress.objects.create(
+            user=obj,
+            email=obj.email, 
+            verified=is_verified,
+            primary=True
+        )

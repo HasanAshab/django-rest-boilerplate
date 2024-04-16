@@ -9,8 +9,8 @@ from dj_rest_auth.views import (
 )
 from api.common.response import APIResponse
 from .models import User
-from .pagination import UserCursorPagination
 from .serializers import ListUserSerializer, UserDetailsSerializer, PhoneNumberSerializer
+from .pagination import UserCursorPagination
 
 
 class UsersView(ListAPIView):
@@ -25,7 +25,7 @@ class ProfileView(ProfileView):
         self._check_role_change_permissions()
         self._perform_email_change()
         serializer.save()
-    
+
     def _check_role_change_permissions(self):
         data = self.request.data
         user = self.get_object()
@@ -33,10 +33,10 @@ class ProfileView(ProfileView):
             user.assert_can('change_role_of_staff', user)
         if 'is_superuser' in data:
             user.assert_can('change_role_of_superuser', user)
-       
+
     def _perform_email_change(self):
         user = self.get_object()
-        new_email = self.request.data.pop('email')
+        new_email = self.request.data.pop('email', None)
         if new_email and new_email != user.email:
             email_address = self._change_email(new_email, commit=False)
             email_address.send_confirmation(self.request, signup=False)
@@ -51,7 +51,6 @@ class ProfileView(ProfileView):
         email_address.verified = False
         email_address.save()
         return email_address
-
 
 
 class UserDetailsView(RetrieveUpdateDestroyAPIView):

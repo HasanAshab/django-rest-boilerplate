@@ -32,14 +32,15 @@ class ListUserSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
 
     def additional_links(self, obj):
         return {
-            'profile': reverse('user-detail', kwargs={'username': obj.username}),
+            'profile': reverse('user-details', kwargs={'username': obj.username}),
         }
  
-class UserDetailsSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
+class UserDetailsSerializer(UserLinksSerializerMixin, WrapSerializerDataMixin, serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'name', 'date_joined', 'is_superuser', 'is_staff', 'links')
         read_only_fields = ('username', 'name', 'date_joined')
+        exclude_wrap_fields = ('links',)
 
 class PhoneNumberSerializer(serializers.ModelSerializer):
     otp = serializers.CharField(max_length=6, min_length=6, required=False)
