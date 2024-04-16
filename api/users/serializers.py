@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 from dj_rest_auth.serializers import UserDetailsSerializer as DefaultProfileSerializer
 from api.common.utils import twilio_verification
+from api.common.serializers import WrapSerializerDataMixin
 from .models import User
 
 
@@ -17,23 +18,13 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
     def additional_links(self, user):
         return {}
 
-class WrapSerializerDataMixin():
-    wrap = 'data'
-    
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        links = data.pop('links')
-        return {
-            self.wrap: data,
-            'links': links
-        }
-
 class ProfileSerializer(UserLinksSerializerMixin, WrapSerializerDataMixin, DefaultProfileSerializer):
     class Meta(DefaultProfileSerializer.Meta):
         fields = ('id', 'email', 'is_email_verified', 'username', 'name', 'phone_number', 'avatar', 'date_joined', 'is_superuser', 'is_staff', 'links')
         read_only_fields = ('date_joined', 'last_login', 'is_email_verified', 'is_active', 'phone_number')
         extra_kwargs = {'avatar': {'read_only': False, 'write_only': True}}
-    
+        exclude_wrap_fields = ('links',)
+      
 class ListUserSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
     class Meta:
         model = User

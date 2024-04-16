@@ -36,13 +36,13 @@ class ProfileView(ProfileView):
        
     def _perform_email_change(self):
         user = self.get_object()
-        new_email = self.request.data.pop('email', None)
+        new_email = self.request.data.pop('email')
         if new_email and new_email != user.email:
             email_address = self._change_email(new_email, commit=False)
             email_address.send_confirmation(self.request, signup=False)
 
     def _change_email(self, new_email, commit=False):
-        user = self.request.user
+        user = self.get_object()
         user.email = new_email
         if commit:
             user.save()

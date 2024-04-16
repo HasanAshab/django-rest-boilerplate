@@ -16,11 +16,29 @@ class ProfileTestCase(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_get_profile(self):
-        self.client.force_authenticate(user=self.user)
+    def test_show_profile(self):
         profile = ProfileSerializer(self.user).data
 
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url) 
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, profile)
+        
+    def test_updating_email_marks_email_as_unverified(self):
+        new_email = 'foo@gmail.com'
+        
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, {'email': new_email}) 
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.email, new_email)
+        self.assertEqual(self.user.is_email_verified, False)
+
+    def test_updating_with_same_email_keep_email_verified(self):
+        self.client.force_authenticate(user=self.user)
+        
+        response = self.client.patch(self.url, {'email': self.user.email}) 
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.is_email_verified, True)
