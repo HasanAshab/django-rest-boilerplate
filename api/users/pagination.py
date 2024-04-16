@@ -1,7 +1,7 @@
 # pagination.py
 from rest_framework.pagination import CursorPagination
-from api.common.pagination import DynamicLimitPagination
+from api.common.pagination import BasePagination
 
 
-class UserCursorPagination(DynamicLimitPagination, CursorPagination):
+class UserCursorPagination(BasePagination, CursorPagination):
     ordering = 'date_joined'

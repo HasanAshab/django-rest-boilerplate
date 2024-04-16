@@ -39,9 +39,8 @@ class UserDetailsSerializer(serializers.ModelSerializer, UserLinksSerializerMixi
         fields = ('id', 'username', 'name', 'date_joined', 'is_superuser', 'is_staff', 'links')
         read_only_fields = ('username', 'name', 'date_joined')
 
-
 class PhoneNumberSerializer(serializers.ModelSerializer):
-    otp = serializers.CharField(max_length=6, required=False)
+    otp = serializers.CharField(max_length=6, min_length=6, required=False)
     
     class Meta:
         model = User

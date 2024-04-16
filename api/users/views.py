@@ -94,15 +94,7 @@ class PhoneNumberView(APIView):
         if 'otp' in serializer.validated_data:
             return APIResponse('Phone number updated!') 
         return APIResponse('Verification code sent to the phone number!', status=status.HTTP_202_ACCEPTED)
-#     
-#         await Otp.verify(code, phoneNumber)
-#     
-#         user.phoneNumber = phoneNumber
-#         await user.save()
-    
-    def put(self, request):
-        return self.patch(request)
-    
+        
     def delete(self, request):
         user = self.get_object()
         user.phone_number = None
