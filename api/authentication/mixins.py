@@ -12,17 +12,17 @@ class HasPolicy:
 
         raise Exception(msg)
 
-    def can(self, action, obj):
+    def can(self, action, *args, **kwargs):
         handler = getattr(self._policy, action)
-        return handler(self, obj)
+        return handler(self, *args, **kwargs)
 
-    def cannot(self, action, obj):
-        return not self.can(action, obj)
+    def cannot(self, action, *args, **kwargs):
+        return not self.can(action, *args, **kwargs)
 
-    def assert_can(self, action, obj):
-        if self.cannot(action, obj):
+    def assert_can(self, action, *args, **kwargs):
+        if self.cannot(action, *args, **kwargs):
             raise PermissionDenied
 
-    def assert_cannot(self, action, obj):
-        if self.can(action, obj):
+    def assert_cannot(self, action, *args, **kwargs):
+        if self.can(action, *args, **kwargs):
             raise PermissionDenied
