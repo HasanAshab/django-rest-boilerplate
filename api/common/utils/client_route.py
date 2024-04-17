@@ -9,11 +9,11 @@ class ClientRouteManager:
 
     def update_paths(self, paths):
         self.url_paths.update(paths)
-    
+
     def base_url(self):
-        return 'https://' + self.config['domain']
-    
-    def url(self, path=''):
+        return "https://" + self.config["domain"]
+
+    def url(self, path=""):
         return urljoin(self.base_url(), path)
 
     def reverse_path(self, name, data=None):
@@ -24,7 +24,6 @@ class ClientRouteManager:
 
     def reverse(self, name, data=None):
         return self.url(self.reverse_path(name, data))
-    
-client_route = ClientRouteManager({
-    'domain': settings.CLIENT_DOMIAN
-})
+
+
+client_route = ClientRouteManager({"domain": settings.CLIENT_DOMIAN})

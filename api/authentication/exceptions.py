@@ -5,5 +5,5 @@ from rest_framework.exceptions import APIException
 
 class InvalidTokenException(APIException):
     status_code = status.HTTP_401_UNAUTHORIZED
-    default_detail = _('Invalid token.')
-    default_code = 'invalid_token'
+    default_detail = _("Invalid token.")
+    default_code = "invalid_token"

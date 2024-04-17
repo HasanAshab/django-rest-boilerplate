@@ -4,4 +4,4 @@ from api.common.pagination import BasePagination
 
 
 class UserCursorPagination(BasePagination, CursorPagination):
-    ordering = 'date_joined'
+    ordering = "date_joined"

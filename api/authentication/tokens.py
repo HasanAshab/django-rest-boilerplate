@@ -7,8 +7,10 @@ class TokenGenerator(PasswordResetTokenGenerator):
         if not self.check_token(user, token):
             raise InvalidTokenException
 
+
 class VerificationTokenGenerator(TokenGenerator):
     def _make_hash_value(self, user, timestamp):
-        return f'{user.pk}{timestamp}{user.is_email_verified}'
-        
+        return f"{user.pk}{timestamp}{user.is_email_verified}"
+
+
 verification_token = VerificationTokenGenerator()

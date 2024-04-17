@@ -11,14 +11,16 @@ from .policies import UserPolicy
 class UserModel(AbstractUser, HasPolicy):
     first_name = None
     last_name = None
-    name = models.CharField(_('Name'), max_length=255, null=True)
-    phone_number = PhoneNumberField(_('Phone Number'), null=True)
-    avatar = models.ImageField(_('Avatar'), upload_to="uploads/avatars/", max_length=100, null=True)
+    name = models.CharField(_("Name"), max_length=255, null=True)
+    phone_number = PhoneNumberField(_("Phone Number"), null=True)
+    avatar = models.ImageField(
+        _("Avatar"), upload_to="uploads/avatars/", max_length=100, null=True
+    )
     _policy = UserPolicy()
 
     @property
     def is_email_verified(self):
         return self.emailaddress_set.filter(primary=True, verified=True).exists()
- 
+
 
 User = LazyProxy(get_user_model)
