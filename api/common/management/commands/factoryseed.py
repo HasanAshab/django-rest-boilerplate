@@ -1,5 +1,9 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.utils.module_loading import import_string
+from django.core.management.base import (
+    BaseCommand,
+)
+from django.utils.module_loading import (
+    import_string,
+)
 
 
 class Command(BaseCommand):
@@ -10,12 +14,9 @@ class Command(BaseCommand):
         parser.add_argument("count", type=int)
 
     def handle(self, *args, **options):
-        path = options.get("factory")
-        count = options.get("count")
+        path, count = options.get("factory"), options.get("count")
         factory = import_string(path)
         factory.create_batch(count)
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'Successfully seeded "{factory._meta.model.__name__}" with {count} records'
-            )
-        )
+        model_name = factory._meta.model.__name__
+        msg = f'Successfully seeded "{model_name}" with {count} records'
+        self.stdout.write(self.style.SUCCESS(msg))

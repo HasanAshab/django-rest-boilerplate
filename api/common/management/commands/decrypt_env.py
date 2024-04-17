@@ -1,7 +1,9 @@
 import os
 from cryptography.fernet import Fernet
-from django.core.management.base import BaseCommand, CommandError
-from django.core.files import File
+from django.core.management.base import (
+    BaseCommand,
+    CommandError,
+)
 from django.conf import settings
 from api.common.utils import env_file
 
@@ -11,7 +13,9 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "key", type=str, help="Encryption key (must be at least 16 characters long)"
+            "key",
+            type=str,
+            help="Encryption key (must be at least 16 chars)",
         )
         parser.add_argument(
             "--force",
@@ -29,7 +33,10 @@ class Command(BaseCommand):
         if not os.path.exists(encrypted_env_file_path):
             raise CommandError(".env.encrypted file does not exist")
 
-        with open(encrypted_env_file_path, "rb") as f:
+        with open(
+            encrypted_env_file_path,
+            "rb",
+        ) as f:
             encrypted_env = f.read()
 
         cipher_suite = Fernet(key.encode())
@@ -39,15 +46,13 @@ class Command(BaseCommand):
             raise CommandError("Invalid encryption key.")
 
         if os.path.exists(env_file.path) and not force:
-            overwrite = input(
-                ".env file already exists. Do you want to overwrite it? (y/n): "
-            )
+            msg = ".env file already exists. \
+            Do you want to overwrite it? (y/n): "
+            overwrite = input(msg)
             if overwrite.lower() != "y":
                 return self.stdout.write(decrypted_env)
 
         with env_file.open() as f:
             f.write(decrypted_env)
-
-        self.stdout.write(
-            self.style.SUCCESS("Environment variables decrypted and saved to .env")
-        )
+        msg = "Environment variables decrypted and saved to .env"
+        self.stdout.write(self.style.SUCCESS(msg))

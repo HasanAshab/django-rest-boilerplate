@@ -19,7 +19,8 @@ class ClientRouteManager:
     def reverse_path(self, name, data=None):
         path = self.url_paths.get(name)
         if not path:
-            raise ValueError(f'No client URL path registered with name: "{name}".')
+            msg = f'No client URL path registered with name: "{name}".'
+            raise ValueError(msg)
         return path.format(**data) if data else path
 
     def reverse(self, name, data=None):

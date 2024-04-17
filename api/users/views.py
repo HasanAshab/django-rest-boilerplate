@@ -1,21 +1,34 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticated,
+)
 from rest_framework.views import APIView
-from rest_framework.mixins import DestroyModelMixin
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
-from allauth.account.models import EmailAddress
+from rest_framework.mixins import (
+    DestroyModelMixin,
+)
+from rest_framework.generics import (
+    ListAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
+from allauth.account.models import (
+    EmailAddress,
+)
 from dj_rest_auth.views import (
     UserDetailsView as ProfileView,
     PasswordChangeView as DefaultPasswordChangeView,
 )
-from api.common.response import APIResponse
+from api.common.response import (
+    APIResponse,
+)
 from .models import User
 from .serializers import (
     ListUserSerializer,
     UserDetailsSerializer,
     PhoneNumberSerializer,
 )
-from .pagination import UserCursorPagination
+from .pagination import (
+    UserCursorPagination,
+)
 
 
 class UsersView(ListAPIView):
@@ -34,20 +47,34 @@ class ProfileView(ProfileView, DestroyModelMixin):
         self._perform_email_change()
         serializer.save()
 
-    def _check_role_change_permissions(self):
+    def _check_role_change_permissions(
+        self,
+    ):
         data = self.request.data
         user = self.get_object()
         if "is_staff" in data:
-            user.assert_can("change_role_of_staff", user)
+            user.assert_can(
+                "change_role_of_staff",
+                user,
+            )
         if "is_superuser" in data:
-            user.assert_can("change_role_of_superuser", user)
+            user.assert_can(
+                "change_role_of_superuser",
+                user,
+            )
 
     def _perform_email_change(self):
         user = self.get_object()
         new_email = self.request.data.pop("email", None)
         if new_email and new_email != user.email:
-            email_address = self._change_email(new_email, commit=False)
-            email_address.send_confirmation(self.request, signup=False)
+            email_address = self._change_email(
+                new_email,
+                commit=False,
+            )
+            email_address.send_confirmation(
+                self.request,
+                signup=False,
+            )
 
     def _change_email(self, new_email, commit=False):
         user = self.get_object()
@@ -75,9 +102,15 @@ class UserDetailsView(RetrieveUpdateDestroyAPIView):
         data = self.request.data
         user = self.get_object()
         if "is_staff" in data:
-            self.request.user.assert_can("change_staff_role", user)
+            self.request.user.assert_can(
+                "change_staff_role",
+                user,
+            )
         if "is_superuser" in data:
-            self.request.user.assert_can("change_role_of_superuser", user)
+            self.request.user.assert_can(
+                "change_role_of_superuser",
+                user,
+            )
         serializer.save()
 
 
@@ -95,7 +128,10 @@ class PhoneNumberView(APIView):
         return self.request.user
 
     def patch(self, request):
-        serializer = PhoneNumberSerializer(request.user, data=request.data)
+        serializer = PhoneNumberSerializer(
+            request.user,
+            data=request.data,
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         if "otp" in serializer.validated_data:

@@ -1,4 +1,6 @@
-from rest_framework.pagination import BasePagination as Pagination
+from rest_framework.pagination import (
+    BasePagination as Pagination,
+)
 
 
 class BasePagination(Pagination):

@@ -1,8 +1,14 @@
 from django.urls import reverse
 from rest_framework import serializers
-from dj_rest_auth.serializers import UserDetailsSerializer as DefaultProfileSerializer
-from api.common.utils import twilio_verification
-from api.common.serializers import WrapSerializerDataMixin
+from dj_rest_auth.serializers import (
+    UserDetailsSerializer as DefaultProfileSerializer,
+)
+from api.common.utils import (
+    twilio_verification,
+)
+from api.common.serializers import (
+    WrapSerializerDataMixin,
+)
 from .models import User
 
 
@@ -11,7 +17,7 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
 
     def get_links(self, user):
         return {
-            "avatar": user.avatar.url if user.avatar else None,
+            "avatar": (user.avatar.url if user.avatar else None),
             **self.additional_links(user),
         }
 
@@ -20,7 +26,9 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
 
 
 class ProfileSerializer(
-    UserLinksSerializerMixin, WrapSerializerDataMixin, DefaultProfileSerializer
+    UserLinksSerializerMixin,
+    WrapSerializerDataMixin,
+    DefaultProfileSerializer,
 ):
     class Meta(DefaultProfileSerializer.Meta):
         fields = (
@@ -43,23 +51,39 @@ class ProfileSerializer(
             "is_active",
             "phone_number",
         )
-        extra_kwargs = {"avatar": {"read_only": False, "write_only": True}}
+        extra_kwargs = {
+            "avatar": {
+                "read_only": False,
+                "write_only": True,
+            }
+        }
         exclude_wrap_fields = ("links",)
 
 
-class ListUserSerializer(serializers.ModelSerializer, UserLinksSerializerMixin):
+class ListUserSerializer(
+    serializers.ModelSerializer,
+    UserLinksSerializerMixin,
+):
     class Meta:
         model = User
-        fields = ("id", "username", "links")
+        fields = (
+            "id",
+            "username",
+            "links",
+        )
 
     def additional_links(self, obj):
-        return {
-            "profile": reverse("user-details", kwargs={"username": obj.username}),
-        }
+        profile_url = reverse(
+            "user-details",
+            kwargs={"username": obj.username},
+        )
+        return {"profile": profile_url}
 
 
 class UserDetailsSerializer(
-    UserLinksSerializerMixin, WrapSerializerDataMixin, serializers.ModelSerializer
+    UserLinksSerializerMixin,
+    WrapSerializerDataMixin,
+    serializers.ModelSerializer,
 ):
     class Meta:
         model = User
@@ -72,12 +96,20 @@ class UserDetailsSerializer(
             "is_staff",
             "links",
         )
-        read_only_fields = ("username", "name", "date_joined")
+        read_only_fields = (
+            "username",
+            "name",
+            "date_joined",
+        )
         exclude_wrap_fields = ("links",)
 
 
 class PhoneNumberSerializer(serializers.ModelSerializer):
-    otp = serializers.CharField(max_length=6, min_length=6, required=False)
+    otp = serializers.CharField(
+        max_length=6,
+        min_length=6,
+        required=False,
+    )
 
     class Meta:
         model = User
@@ -86,12 +118,16 @@ class PhoneNumberSerializer(serializers.ModelSerializer):
 
     def validate_phone_number(self, phone_number):
         if phone_number == self.instance.phone_number:
-            raise serializers.ValidationError("Phone number can't be same as old one.")
+            msg = "Phone number can't be same as old one."
+            raise serializers.ValidationError(msg)
         return phone_number
 
     def validate_otp(self, otp):
         phone_number = self.validated_data["phone_number"]
-        print(phone_number, self.phone_number)
+        print(
+            phone_number,
+            self.phone_number,
+        )
         if not twilio_verification.is_valid(phone_number, otp):
             raise serializers.ValidationError("Invalid OTP code.")
         return otp

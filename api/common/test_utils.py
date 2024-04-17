@@ -5,7 +5,14 @@ from django.conf import settings
 
 
 def fake_file(name, mode="rb"):
-    return open(os.path.join(settings.STATIC_ROOT, "test", name), mode=mode)
+    return open(
+        os.path.join(
+            settings.STATIC_ROOT,
+            "test",
+            name,
+        ),
+        mode=mode,
+    )
 
 
 @contextmanager

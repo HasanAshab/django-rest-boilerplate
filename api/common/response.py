@@ -1,5 +1,7 @@
 from http.client import responses
-from rest_framework.response import Response
+from rest_framework.response import (
+    Response,
+)
 
 
 class APIResponse(Response):
@@ -17,14 +19,14 @@ class APIResponse(Response):
     def get_wrapper_key(self):
         if not self.wrap:
             return None
-        if self.wrap == True:
+        if self.wrap is True:
             return "data"
         return self.wrap
 
     def _format_response_data(self, data):
         data_type = type(data)
 
-        if data == None:
+        if data is None:
             return data
         if not self.wrap and data_type in [list, tuple]:
             return data
@@ -34,5 +36,8 @@ class APIResponse(Response):
         elif data_type != dict:
             data = {self.get_wrapper_key(): data}
         data["success"] = self.is_successful()
-        data["message"] = data.get("message", self.standard_message())
+        data["message"] = data.get(
+            "message",
+            self.standard_message(),
+        )
         return data

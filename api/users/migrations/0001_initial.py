@@ -12,7 +12,10 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("auth", "0012_alter_user_first_name_max_length"),
+        (
+            "auth",
+            "0012_alter_user_first_name_max_length",
+        ),
     ]
 
     operations = [
@@ -28,11 +31,19 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "password",
+                    models.CharField(
+                        max_length=128,
+                        verbose_name="password",
+                    ),
+                ),
                 (
                     "last_login",
                     models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
+                        blank=True,
+                        null=True,
+                        verbose_name="last login",
                     ),
                 ),
                 (
@@ -61,7 +72,9 @@ class Migration(migrations.Migration):
                 (
                     "email",
                     models.EmailField(
-                        blank=True, max_length=254, verbose_name="email address"
+                        blank=True,
+                        max_length=254,
+                        verbose_name="email address",
                     ),
                 ),
                 (
@@ -83,23 +96,32 @@ class Migration(migrations.Migration):
                 (
                     "date_joined",
                     models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
+                        default=django.utils.timezone.now,
+                        verbose_name="date joined",
                     ),
                 ),
                 (
                     "name",
-                    models.CharField(max_length=255, null=True, verbose_name="Name"),
+                    models.CharField(
+                        max_length=255,
+                        null=True,
+                        verbose_name="Name",
+                    ),
                 ),
                 (
                     "phone_number",
                     models.CharField(
-                        max_length=20, null=True, verbose_name="Phone Number"
+                        max_length=20,
+                        null=True,
+                        verbose_name="Phone Number",
                     ),
                 ),
                 (
                     "avatar",
                     models.ImageField(
-                        null=True, upload_to="uploads/avatars/", verbose_name="Avatar"
+                        null=True,
+                        upload_to="uploads/avatars/",
+                        verbose_name="Avatar",
                     ),
                 ),
                 (
@@ -130,9 +152,15 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "users",
                 "abstract": False,
             },
-            bases=(models.Model, api.authentication.mixins.HasPolicy),
+            bases=(
+                models.Model,
+                api.authentication.mixins.HasPolicy,
+            ),
             managers=[
-                ("objects", django.contrib.auth.models.UserManager()),
+                (
+                    "objects",
+                    django.contrib.auth.models.UserManager(),
+                ),
             ],
         ),
     ]

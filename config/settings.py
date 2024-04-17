@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Django settings for config project.
 
@@ -12,7 +13,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-from corsheaders.defaults import default_headers
+from corsheaders.defaults import (
+    default_headers,
+)
 from environ import Env
 
 SITE_ID = 1
@@ -183,7 +186,7 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.AcceptHeaderVersioning",
     # Auth
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        #'knox.auth.TokenAuthentication',
+        # 'knox.auth.TokenAuthentication',
         "rest_framework.authentication.TokenAuthentication",
     ),
     # Exception

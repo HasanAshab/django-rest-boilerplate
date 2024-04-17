@@ -1,5 +1,9 @@
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from .exceptions import InvalidTokenException
+from django.contrib.auth.tokens import (
+    PasswordResetTokenGenerator,
+)
+from .exceptions import (
+    InvalidTokenException,
+)
 
 
 class TokenGenerator(PasswordResetTokenGenerator):

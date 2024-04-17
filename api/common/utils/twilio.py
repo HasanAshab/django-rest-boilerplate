@@ -1,5 +1,7 @@
 from django.conf import settings
-from django_twilio.client import twilio_client
+from django_twilio.client import (
+    twilio_client,
+)
 
 
 class TwilioVerificationService:
@@ -21,5 +23,6 @@ class TwilioVerificationService:
 
 
 twilio_verification = TwilioVerificationService(
-    client=twilio_client, service_sid=settings.TWILIO_VERIFY_SERVICE_SID
+    client=twilio_client,
+    service_sid=settings.TWILIO_VERIFY_SERVICE_SID,
 )

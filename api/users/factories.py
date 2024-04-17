@@ -1,7 +1,11 @@
 import factory
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import (
+    make_password,
+)
 from .models import UserModel
-from allauth.account.models import EmailAddress
+from allauth.account.models import (
+    EmailAddress,
+)
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -18,11 +22,16 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Params:
         admin = factory.Trait(is_superuser=True)
         staff = factory.Trait(is_staff=True)
-        has_phone_number = factory.Trait(phone_number=factory.Faker("phone_number"))
+        has_phone_number = factory.Trait(
+            phone_number=factory.Faker("phone_number")
+        )
 
     @factory.post_generation
     def setup_email(obj, create, extracted, **kwargs):
         is_verified = not kwargs.get("unverified", False)
         EmailAddress.objects.create(
-            user=obj, email=obj.email, verified=is_verified, primary=True
+            user=obj,
+            email=obj.email,
+            verified=is_verified,
+            primary=True,
         )

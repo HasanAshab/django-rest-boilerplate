@@ -1,7 +1,13 @@
 from rest_framework import status
-from rest_framework.views import exception_handler
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
+from rest_framework.views import (
+    exception_handler,
+)
+from rest_framework.exceptions import (
+    ValidationError,
+)
+from rest_framework.response import (
+    Response,
+)
 
 
 def validation_exception_handler(exc, context):
@@ -11,9 +17,15 @@ def validation_exception_handler(exc, context):
             status=status.HTTP_400_BAD_REQUEST,
         )
     errors = {}
-    for field_name, field_errors in exc.detail.items():
+    for (
+        field_name,
+        field_errors,
+    ) in exc.detail.items():
         errors[field_name] = field_errors[0]
-    return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(
+        {"errors": errors},
+        status=status.HTTP_400_BAD_REQUEST,
+    )
 
 
 def handler(exc, context):

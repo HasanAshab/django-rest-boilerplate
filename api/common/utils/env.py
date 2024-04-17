@@ -15,7 +15,10 @@ class EnvFile:
 
     def write(self, data):
         with self.open("w") as f:
-            for key, value in data.items():
+            for (
+                key,
+                value,
+            ) in data.items():
                 f.write(f"{key}={value}\n")
 
     def update(self, **new_data):

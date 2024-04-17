@@ -1,5 +1,7 @@
 # permissions.py
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import (
+    BasePermission,
+)
 
 
 class IsEmailVerified(BasePermission):

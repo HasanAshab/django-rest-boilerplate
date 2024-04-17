@@ -1,5 +1,9 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.core.management.utils import get_random_secret_key
+from django.core.management.base import (
+    BaseCommand,
+)
+from django.core.management.utils import (
+    get_random_secret_key,
+)
 from api.common.utils import env_file
 
 
