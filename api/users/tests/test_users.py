@@ -42,7 +42,7 @@ class UsersTestCase(APITestCase):
             self.user.id,
         )
 
-    def test_retrieve_user_needs_authentication(
+    def test_retrieving_user_needs_authentication(
         self,
     ):
         user2 = UserFactory()

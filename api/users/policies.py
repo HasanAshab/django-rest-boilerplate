@@ -1,7 +1,4 @@
 class UserPolicy:
-    def foo(self, user, bar):
-        return True
-    
     def delete(self, user, target_user):
         return (
             user == target_user

@@ -22,12 +22,12 @@ urlpatterns = [
     path(
         "me/password/",
         PasswordChangeView.as_view(),
-        name="change-password",
+        name="password",
     ),
     path(
         "me/phone-number/",
         PhoneNumberView.as_view(),
-        name="change-password",
+        name="phone-number",
     ),
     path(
         "<str:username>/",

@@ -1,3 +1,4 @@
+from django.core import mail
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import (
@@ -37,9 +38,7 @@ class ProfileTestCase(APITestCase):
         )
         self.assertEqual(response.data, profile)
 
-    def test_updating_email_marks_email_as_unverified(
-        self,
-    ):
+    def test_update_email(self):
         new_email = "foo@gmail.com"
 
         self.client.force_authenticate(user=self.user)
@@ -47,7 +46,6 @@ class ProfileTestCase(APITestCase):
             self.url,
             {"email": new_email},
         )
-
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK,
@@ -57,8 +55,10 @@ class ProfileTestCase(APITestCase):
             self.user.is_email_verified,
             False,
         )
-
-    def test_updating_with_same_email_keeps_email_verified(
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [new_email])
+       
+    def test_updating_with_same_email(
         self,
     ):
         self.client.force_authenticate(user=self.user)
@@ -75,3 +75,17 @@ class ProfileTestCase(APITestCase):
             self.user.is_email_verified,
             True,
         )
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_delete_account(
+        self,
+    ):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.url)
+        user_deleted = not User.objects.filter(pk=self.user.pk).exists()
+        
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+        self.assertTrue(user_deleted)

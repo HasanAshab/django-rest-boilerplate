@@ -55,8 +55,10 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_spectacular",
     "dj_rest_auth",
     "knox",
+    "axes",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -77,9 +79,11 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "axes.middleware.AxesMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
@@ -147,6 +151,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    },
+    'axes': {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake2",
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -189,6 +205,12 @@ REST_FRAMEWORK = {
         # 'knox.auth.TokenAuthentication',
         "rest_framework.authentication.TokenAuthentication",
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'dj_rest_auth': '100/day',
+    },
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
     # Pagination
@@ -196,7 +218,10 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 15,
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    # Docs
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
 
 # Knox (For Auth Token Management)
 REST_KNOX = {
@@ -233,3 +258,9 @@ CLIENT_DOMIAN = "localhost:5000"
 TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")
 TWILIO_VERIFY_SERVICE_SID = env("TWILIO_VERIFY_SERVICE_SID")
+
+#Axes (Brute Force Login Protection)
+AXES_FAILURE_LIMIT = 5
+AXES_CACHE = 'axes'
+AXES_HANDLER = 'axes.handlers.cache.AxesCacheHandler'
+AXES_RESET_ON_SUCCESS = True

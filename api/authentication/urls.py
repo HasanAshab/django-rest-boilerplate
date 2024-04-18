@@ -58,3 +58,4 @@ client_route.update_paths(
         "confirm-password-reset": "/password/reset/{key}",
     }
 )
+

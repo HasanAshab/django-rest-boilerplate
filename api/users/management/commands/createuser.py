@@ -1,7 +1,7 @@
 from django.core.management.base import (
     BaseCommand,
 )
-from api.accounts.factories import (
+from api.users.factories import (
     UserFactory,
 )
 from knox.views import LoginView

@@ -123,11 +123,7 @@ class PhoneNumberSerializer(serializers.ModelSerializer):
         return phone_number
 
     def validate_otp(self, otp):
-        phone_number = self.validated_data["phone_number"]
-        print(
-            phone_number,
-            self.phone_number,
-        )
+        phone_number = self.initial_data["phone_number"]
         if not twilio_verification.is_valid(phone_number, otp):
             raise serializers.ValidationError("Invalid OTP code.")
         return otp
