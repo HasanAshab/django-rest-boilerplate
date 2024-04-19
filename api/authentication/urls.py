@@ -14,10 +14,17 @@ from api.common.utils import (
     client_route,
 )
 
+from .decorators import rate_limit
+from django.utils.decorators import method_decorator
+
+@method_decorator(rate_limit(action="signup"), name="post")
+class L(LoginView):
+    pass
+
 urlpatterns = [
     path(
         "login/",
-        LoginView.as_view(),
+        L.as_view(),
         name="login",
     ),
     path(

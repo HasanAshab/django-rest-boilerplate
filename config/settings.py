@@ -210,6 +210,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'dj_rest_auth': '100/day',
+       # 'change_password': '100/d'
     },
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
@@ -238,9 +239,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_EMAIL_NOTIFICATIONS = True
-
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:5000"]
 ACCOUNT_USERNAME_MIN_LENGTH = 3
-ACCOUNT_RATE_LIMITS = True
 
 # DJ-Rest-Auth
 REST_AUTH = {
@@ -261,6 +261,7 @@ TWILIO_VERIFY_SERVICE_SID = env("TWILIO_VERIFY_SERVICE_SID")
 
 #Axes (Brute Force Login Protection)
 AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 0.03
 AXES_CACHE = 'axes'
 AXES_HANDLER = 'axes.handlers.cache.AxesCacheHandler'
 AXES_RESET_ON_SUCCESS = True

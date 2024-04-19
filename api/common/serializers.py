@@ -36,7 +36,7 @@ class WrapSerializerDataMixin:
     def to_representation(self, instance):
         wrap_key = self.get_wrap_key()
         data = super().to_representation(instance)
-        if isinstance(wrap_key, str):
+        if not isinstance(wrap_key, str):
             return data
 
         unwrapped_fields = self.get_unwrapped_fields()

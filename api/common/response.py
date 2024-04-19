@@ -5,10 +5,11 @@ from rest_framework.response import (
 
 
 class APIResponse(Response):
-    def __init__(self, data=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.wrap = kwargs.pop("wrap", True)
-        data = self._format_response_data(data)
-        super().__init__(data, *args, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.data = self._format_response_data(self.data)
+
 
     def is_successful(self):
         return 199 < self.status_code < 400
@@ -24,16 +25,16 @@ class APIResponse(Response):
         return self.wrap
 
     def _format_response_data(self, data):
-        data_type = type(data)
-
         if data is None:
-            return data
+            data = {}
+        data_type = type(data)
+        
         if not self.wrap and data_type in [list, tuple]:
             return data
 
         if data_type == str:
             data = {"message": data}
-        elif data_type != dict:
+        elif data_type in [list, tuple]:
             data = {self.get_wrapper_key(): data}
         data["success"] = self.is_successful()
         data["message"] = data.get(
