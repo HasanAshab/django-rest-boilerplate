@@ -11,9 +11,7 @@ from .views import (
 from django.utils.decorators import method_decorator
 from api.authentication.decorators import rate_limit
 
-@method_decorator(rate_limit(action="change_password"), name="patch")
-class P(PasswordChangeView):
-    pass
+#@method_decorator(rate_limit(action="change_password"), name="patch")
 
 
 urlpatterns = [
@@ -29,7 +27,7 @@ urlpatterns = [
     ),
     path(
         "me/password/",
-        P.as_view(),
+        PasswordChangeView.as_view(),
         name="password",
     ),
     path(

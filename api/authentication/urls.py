@@ -17,9 +17,10 @@ from api.common.utils import (
 from .decorators import rate_limit
 from django.utils.decorators import method_decorator
 
-@method_decorator(rate_limit(action="signup"), name="post")
 class L(LoginView):
-    pass
+    @rate_limit(action="signup")
+    def post(self, *args, **kwargs):
+        return super().post(*args, **kwargs)
 
 urlpatterns = [
     path(

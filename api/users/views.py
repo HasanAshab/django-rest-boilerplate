@@ -20,6 +20,7 @@ from dj_rest_auth.views import (
 from api.common.response import (
     APIResponse,
 )
+from api.authentication.decorators import rate_limit
 from .models import User
 from .serializers import (
     ListUserSerializer,
@@ -117,6 +118,7 @@ class UserDetailsView(RetrieveUpdateDestroyAPIView):
 class PasswordChangeView(DefaultPasswordChangeView):
     http_method_names = ("patch",)
 
+    @rate_limit(action="change_password")
     def patch(self, *args, **kwargs):
         return super().post(*args, **kwargs)
 
