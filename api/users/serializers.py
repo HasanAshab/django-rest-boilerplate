@@ -28,6 +28,7 @@ class ProfileSerializer(
     WrapSerializerDataMixin,
 ):
     class Meta:
+        model = User
         fields = (
             "id",
             "email",
@@ -44,6 +45,7 @@ class ProfileSerializer(
         read_only_fields = (
             "date_joined",
             "last_login",
+            "email",
             "is_email_verified",
             "is_active",
             "phone_number",

@@ -30,9 +30,18 @@ class UsersView(ListAPIView):
     serializer_class = ListUserSerializer
     pagination_class = UserCursorPagination
 
+from allauth.headless.base.views import AuthenticatedAPIView
+
 
 class ProfileView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return self.request.user
+        
+class ProfileVie(RetrieveUpdateDestroyAPIView):
+    #permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
     def get_object(self):

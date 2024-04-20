@@ -186,8 +186,7 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.AcceptHeaderVersioning",
     # Auth
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        # 'knox.auth.TokenAuthentication',
-        "rest_framework.authentication.TokenAuthentication",
+        'knox.auth.TokenAuthentication',
     ),
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
@@ -218,6 +217,7 @@ ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_NOTIFICATIONS = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.STokenStrategy'
 
 # Client (Frontend) Url Manager
 CLIENT_DOMIAN = "localhost:5000"

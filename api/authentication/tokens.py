@@ -1,20 +1,8 @@
-from django.contrib.auth.tokens import (
-    PasswordResetTokenGenerator,
-)
-from .exceptions import (
-    InvalidTokenException,
-)
+from allauth.headless.tokens.sessions import SessionTokenStrategy
+from knox.views import LoginView
 
 
-class TokenGenerator(PasswordResetTokenGenerator):
-    def verify(self, user, token):
-        if not self.check_token(user, token):
-            raise InvalidTokenException
-
-
-class VerificationTokenGenerator(TokenGenerator):
-    def _make_hash_value(self, user, timestamp):
-        return f"{user.pk}{timestamp}{user.is_email_verified}"
-
-
-verification_token = VerificationTokenGenerator()
+class STokenStrategy(SessionTokenStrategy):
+    def create_access_token(self, request):
+        _, token = LoginView(request=request).create_token()
+        return token

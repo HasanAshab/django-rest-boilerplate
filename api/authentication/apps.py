@@ -9,9 +9,9 @@ class AuthenticationConfig(AppConfig):
         self._register_client_urls()
 
     def _register_client_urls(self):
-        from api.common.utils import client_route as jfkridjdhdjdhfhdjfhfhdjjfjdjdjrjdijejfjdjjfjdijf
+        from api.common.utils import client_route
 
-        jfkridjdhdjdhfhdjfhfhdjjfjdjdjrjdijejfjdjjfjdijf.update_paths(
+        client_route.update_paths(
             {
                 "confirm-email-verification": "/email/verify/{key}",
                 "confirm-password-reset": "/password/reset/{key}",

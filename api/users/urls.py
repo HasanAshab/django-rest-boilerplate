@@ -24,22 +24,22 @@ urlpatterns = [
         name="profile",
     ),
     path(
-        "me/email",
+        "me/email/",
         ManageEmailView.as_api_view(client=client),
         name="manage_email",
     ),
     path(
-        "me/password",
+        "me/password/",
         PasswordChangeView.as_api_view(client=client),
         name="password",
     ),
     path(
-        "me/phone-number",
+        "me/phone-number/",
         PhoneNumberView.as_view(),
         name="phone-number",
     ),
     path(
-        "<str:username>",
+        "<str:username>/",
         UserDetailsView.as_view(),
         name="user-details",
     ),
