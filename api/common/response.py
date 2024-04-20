@@ -10,7 +10,6 @@ class APIResponse(Response):
         super().__init__(*args, **kwargs)
         self.data = self._format_response_data(self.data)
 
-
     def is_successful(self):
         return 199 < self.status_code < 400
 
@@ -28,7 +27,7 @@ class APIResponse(Response):
         if data is None:
             data = {}
         data_type = type(data)
-        
+
         if not self.wrap and data_type in [list, tuple]:
             return data
 

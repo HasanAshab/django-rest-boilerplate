@@ -7,19 +7,12 @@ from allauth.headless.account.views import (
     VerifyEmailView,
     RequestPasswordResetView,
     ResetPasswordView,
-    ManageEmailView
 )
-from api.common.utils import \
-    client_route
 
 
 client = Client.APP
 
 urlpatterns = [
-    path(
-        "foo",
-        ManageEmailView.as_api_view(client=client)
-    ),
     path(
         "signup",
         SignupView.as_api_view(client=client),
@@ -51,10 +44,3 @@ urlpatterns = [
         name="confirm-reset-password",
     ),
 ]
-
-client_route.update_paths(
-    {
-        "confirm-email-verification": "/email/verify/{key}",
-        "confirm-password-reset": "/password/reset/{key}",
-    }
-)

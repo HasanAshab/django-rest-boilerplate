@@ -1,8 +1,5 @@
 from django.urls import reverse
 from rest_framework import serializers
-from dj_rest_auth.serializers import (
-    UserDetailsSerializer as DefaultProfileSerializer,
-)
 from api.common.utils import (
     twilio_verification,
 )
@@ -26,11 +23,11 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
 
 
 class ProfileSerializer(
+    serializers.ModelSerializer,
     UserLinksSerializerMixin,
     WrapSerializerDataMixin,
-    DefaultProfileSerializer,
 ):
-    class Meta(DefaultProfileSerializer.Meta):
+    class Meta:
         fields = (
             "id",
             "email",

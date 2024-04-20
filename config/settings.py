@@ -57,12 +57,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
-    "dj_rest_auth",
     "knox",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "dj_rest_auth.registration",
     "api.common",
     "api.authentication",
     "api.users",
@@ -191,13 +189,6 @@ REST_FRAMEWORK = {
         # 'knox.auth.TokenAuthentication',
         "rest_framework.authentication.TokenAuthentication",
     ),
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.ScopedRateThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'dj_rest_auth': '100/day',
-       # 'change_password': '100/d'
-    },
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
     # Pagination
@@ -206,7 +197,7 @@ REST_FRAMEWORK = {
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     # Docs
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
@@ -222,20 +213,11 @@ KNOX_TOKEN_MODEL = "knox.AuthToken"
 ACCOUNT_ADAPTER = "api.authentication.adapter.AccountAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_NOTIFICATIONS = True
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:5000"]
 ACCOUNT_USERNAME_MIN_LENGTH = 3
-
-# DJ-Rest-Auth
-REST_AUTH = {
-    # 'TOKEN_MODEL': 'knox.models.AuthToken',
-    # 'TOKEN_SERIALIZER': 'api.authentication.serializers.TokenSerializer',
-    "USER_DETAILS_SERIALIZER": "api.users.serializers.ProfileSerializer",
-    "PASSWORD_RESET_SERIALIZER": "api.authentication.serializers.PasswordResetSerializer",
-}
-
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
 # Client (Frontend) Url Manager
 CLIENT_DOMIAN = "localhost:5000"

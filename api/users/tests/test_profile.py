@@ -57,7 +57,7 @@ class ProfileTestCase(APITestCase):
         )
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [new_email])
-       
+
     def test_updating_with_same_email(
         self,
     ):
@@ -83,7 +83,7 @@ class ProfileTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(self.url)
         user_deleted = not User.objects.filter(pk=self.user.pk).exists()
-        
+
         self.assertEqual(
             response.status_code,
             status.HTTP_204_NO_CONTENT,

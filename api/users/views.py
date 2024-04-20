@@ -3,9 +3,6 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 from rest_framework.views import APIView
-from rest_framework.mixins import (
-    DestroyModelMixin,
-)
 from rest_framework.generics import (
     ListAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -13,23 +10,18 @@ from rest_framework.generics import (
 from allauth.account.models import (
     EmailAddress,
 )
-from dj_rest_auth.views import (
-    UserDetailsView as ProfileView,
-    PasswordChangeView as DefaultPasswordChangeView,
-)
+from allauth.headless.account.views import ChangePasswordView
 from api.common.response import (
     APIResponse,
 )
-from api.authentication.decorators import rate_limit
 from .models import User
 from .serializers import (
     ListUserSerializer,
     UserDetailsSerializer,
+    ProfileSerializer,
     PhoneNumberSerializer,
 )
-from .pagination import (
-    UserCursorPagination,
-)
+from .pagination import UserCursorPagination
 
 
 class UsersView(ListAPIView):
@@ -39,9 +31,12 @@ class UsersView(ListAPIView):
     pagination_class = UserCursorPagination
 
 
-class ProfileView(ProfileView, DestroyModelMixin):
-    def delete(self, request):
-        return self.destroy(request)
+class ProfileView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        return self.request.user
 
     def perform_update(self, serializer):
         self._check_role_change_permissions()
@@ -115,10 +110,9 @@ class UserDetailsView(RetrieveUpdateDestroyAPIView):
         serializer.save()
 
 
-class PasswordChangeView(DefaultPasswordChangeView):
+class PasswordChangeView(ChangePasswordView):
     http_method_names = ("patch",)
 
-    @rate_limit(action="change_password")
     def patch(self, *args, **kwargs):
         return super().post(*args, **kwargs)
 
