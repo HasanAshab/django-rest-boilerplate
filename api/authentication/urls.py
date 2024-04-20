@@ -17,6 +17,10 @@ client = Client.APP
 
 urlpatterns = [
     path(
+        "foo",
+        ManageEmailView.as_api_view(client=client)
+    ),
+    path(
         "signup",
         SignupView.as_api_view(client=client),
         name="signup",

@@ -13,7 +13,6 @@ from api.authentication.decorators import rate_limit
 
 #@method_decorator(rate_limit(action="change_password"), name="patch")
 
-
 urlpatterns = [
     path(
         "",
