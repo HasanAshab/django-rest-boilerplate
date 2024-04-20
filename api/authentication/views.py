@@ -1,3 +1,15 @@
+from dj_rest_auth.views import (
+    LoginView,
+    LogoutView,
+    PasswordResetConfirmView,
+    PasswordResetView,
+)
+from dj_rest_auth.registration.views import (
+    RegisterView,
+    VerifyEmailView,
+    ResendEmailVerificationView,
+)
+from .decorators import rate_limit
 
 
 class LoginView(BaseLoginView):

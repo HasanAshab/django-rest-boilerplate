@@ -1,61 +1,49 @@
 from django.urls import path
-from dj_rest_auth.views import (
+from allauth.headless.constants import Client
+from allauth.headless.account.views import (
+    SignupView,
     LoginView,
-    LogoutView,
-    PasswordResetConfirmView,
-    PasswordResetView,
-)
-from dj_rest_auth.registration.views import (
-    RegisterView,
+    SessionView,
     VerifyEmailView,
-    ResendEmailVerificationView,
+    RequestPasswordResetView,
+    ResetPasswordView,
+    ManageEmailView
 )
-from api.common.utils import (
-    client_route,
-)
+from api.common.utils import \
+    client_route
 
-from .decorators import rate_limit
-from django.utils.decorators import method_decorator
 
-class L(LoginView):
-    @rate_limit(action="signup")
-    def post(self, *args, **kwargs):
-        return super().post(*args, **kwargs)
+client = Client.APP
 
 urlpatterns = [
     path(
-        "login/",
-        L.as_view(),
+        "signup",
+        SignupView.as_api_view(client=client),
+        name="signup",
+    ),
+    path(
+        "login",
+        LoginView.as_api_view(client=client),
         name="login",
     ),
     path(
-        "logout/",
-        LogoutView.as_view(),
-        name="logout",
+        "session",
+        SessionView.as_api_view(client=client),
+        name="current-session",
     ),
     path(
-        "register/",
-        RegisterView.as_view(),
-        name="register",
+        "email/verify",
+        VerifyEmailView.as_api_view(client=client),
+        name="verify-email",
     ),
     path(
-        "verification/",
-        VerifyEmailView.as_view(),
-        name="verification",
-    ),
-    path(
-        "verification/notifications/",
-        ResendEmailVerificationView.as_view(),
-        name="resend-verification",
-    ),
-    path(
-        "password/reset",
-        PasswordResetView.as_view(),
-        name="reset-password",
+        "password/reset/request",
+        RequestPasswordResetView.as_api_view(client=client),
+        name="request-reset-password",
     ),
     path(
         "password/reset/confirm",
-        PasswordResetConfirmView.as_view(),
+        ResetPasswordView.as_api_view(client=client),
         name="confirm-reset-password",
     ),
 ]
@@ -66,4 +54,3 @@ client_route.update_paths(
         "confirm-password-reset": "/password/reset/{key}",
     }
 )
-
