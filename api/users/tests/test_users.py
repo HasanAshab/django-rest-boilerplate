@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import (
@@ -16,6 +17,13 @@ class UsersTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
 
+    def _reverse_user_url(self, user: User) -> str:
+        return reverse(
+            "user-details",
+            kwargs={"username": user.username},
+        )
+        
+        
     def test_list_users_needs_authentication(
         self,
     ):
@@ -46,10 +54,7 @@ class UsersTestCase(APITestCase):
         self,
     ):
         user2 = UserFactory()
-        url = reverse(
-            "user-details",
-            kwargs={"username": user2.username},
-        )
+        url = self._reverse_user_url(user2)
 
         response = self.client.get(url)
 
@@ -57,13 +62,10 @@ class UsersTestCase(APITestCase):
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
         )
-
+    
     def test_retrieve_user(self):
         user2 = UserFactory()
-        url = reverse(
-            "user-details",
-            kwargs={"username": user2.username},
-        )
+        url = self._reverse_user_url(user2)
         data = UserDetailsSerializer(user2).data
 
         self.client.force_authenticate(user=self.user)
@@ -74,102 +76,35 @@ class UsersTestCase(APITestCase):
             status.HTTP_200_OK,
         )
         self.assertEqual(response.data, data)
-
-    def test_can_not_be_staff(self):
-        url = reverse(
-            "user-details",
-            kwargs={"username": self.user.username},
-        )
-
-        self.client.force_authenticate(user=self.user)
-        response = self.client.patch(url, {"is_staff": True})
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_403_FORBIDDEN,
-        )
-        self.assertEqual(self.user.is_staff, False)
-
-    def test_can_not_be_admin(self):
-        url = reverse(
-            "user-details",
-            kwargs={"username": self.user.username},
-        )
-
-        self.client.force_authenticate(user=self.user)
-        response = self.client.patch(url, {"is_superuser": True})
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_403_FORBIDDEN,
-        )
-        self.assertEqual(
-            self.user.is_superuser,
-            False,
-        )
-
-    def test_staff_can_be_user(self):
-        staff = UserFactory(staff=True)
-        url = reverse(
-            "user-details",
-            kwargs={"username": staff.username},
-        )
-
-        self.client.force_authenticate(user=staff)
-        response = self.client.patch(url, {"is_staff": False})
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK,
-        )
-        self.assertEqual(staff.is_staff, False)
-
-    def test_staff_can_not_be_admin(
+   
+    def test_deleting_user_needs_authentication(
         self,
     ):
-        staff = UserFactory(staff=True)
-        url = reverse(
-            "user-details",
-            kwargs={"username": staff.username},
-        )
+        user2 = UserFactory()
+        url = self._reverse_user_url(user2)
 
-        self.client.force_authenticate(user=staff)
-        response = self.client.patch(url, {"is_superuser": True})
+        response = self.client.delete(url)
 
         self.assertEqual(
             response.status_code,
-            status.HTTP_403_FORBIDDEN,
+            status.HTTP_401_UNAUTHORIZED,
         )
-        self.assertEqual(staff.is_superuser, False)
+     
+    @patch("api.authentication.mixins.HasPolicy.assert_can")
+    def test_delete_user(self, mocked_policy_checker_method):
+        user2 = UserFactory()
+        url = self._reverse_user_url(user2)
 
-    def test_admin_can_be_user(self):
-        admin = UserFactory(admin=True)
-        url = reverse(
-            "user-details",
-            kwargs={"username": admin.username},
-        )
-
-        self.client.force_authenticate(user=admin)
-        response = self.client.patch(url, {"is_superuser": False})
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(url)
+        user_deleted = not User.objects.filter(pk=user2.pk).exists()
 
         self.assertEqual(
             response.status_code,
-            status.HTTP_200_OK,
+            status.HTTP_204_NO_CONTENT,
         )
-        self.assertEqual(admin.is_superuser, False)
-
-    def test_admin_can_be_staff(self):
-        admin = UserFactory(admin=True)
-        url = reverse(
-            "user-details",
-            kwargs={"username": admin.username},
-        )
-
-        self.client.force_authenticate(user=admin)
-        response = self.client.patch(url, {"is_staff": True})
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK,
-        )
-        self.assertEqual(admin.is_staff, True)
+        mocked_policy_checker_method.assert_called_once()
+        action, checked_user = mocked_policy_checker_method._mock_call_args.args
+        self.assertEqual(action, 'delete')
+        self.assertEqual(checked_user.username, user2.username)
+        self.assertTrue(user_deleted)

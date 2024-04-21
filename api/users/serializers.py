@@ -48,6 +48,8 @@ class ProfileSerializer(
             "email",
             "is_email_verified",
             "is_active",
+            "is_staff",
+            "is_superuser",
             "phone_number",
         )
         extra_kwargs = {
@@ -94,11 +96,6 @@ class UserDetailsSerializer(
             "is_superuser",
             "is_staff",
             "links",
-        )
-        read_only_fields = (
-            "username",
-            "name",
-            "date_joined",
         )
         exclude_wrap_fields = ("links",)
 

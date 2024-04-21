@@ -12,9 +12,8 @@ from phonenumber_field.modelfields import (
     PhoneNumberField,
 )
 from api.common.utils import LazyProxy
-from api.authentication.mixins import (
-    HasPolicy,
-)
+from api.authentication.mixins import \
+    HasPolicy
 from .policies import UserPolicy
 
 
@@ -40,6 +39,10 @@ class UserModel(AbstractUser, HasPolicy):
         return self.emailaddress_set.filter(
             primary=True, verified=True
         ).exists()
+        
+    class Meta:
+        db_table = 'users'
 
 
 User = LazyProxy(get_user_model)
+

@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.mfa",
     "api.common",
     "api.authentication",
     "api.users",
@@ -227,3 +228,46 @@ CLIENT_DOMIAN = "localhost:5000"
 TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")
 TWILIO_VERIFY_SERVICE_SID = env("TWILIO_VERIFY_SERVICE_SID")
+
+
+LOGGING = {
+
+    'version': 1,
+
+    'disable_existing_loggers': False,
+
+    'handlers': {
+
+        'console': {
+
+            'level': 'DEBUG',
+
+            'class': 'logging.StreamHandler',
+
+        },
+
+        'file': {
+
+            'level': 'DEBUG',
+
+            'class': 'logging.FileHandler',
+
+            'filename': 'django_queries.log',  # Choose a file name and path
+
+        },
+
+    },
+
+    'loggers': {
+        'django.db.backends': {
+
+            'handlers': ['file'],
+
+            'level': 'DEBUG',
+
+            'propagate': False,
+
+        },
+
+    },
+}
