@@ -1,4 +1,4 @@
-class ProtectedFieldSerializer:
+class ProtectedFieldMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not self.should_show_protected_fields():
@@ -21,7 +21,7 @@ class ProtectedFieldSerializer:
             self.fields[field_name].write_only = True
 
 
-class WrapSerializerDataMixin:
+class WrapDataMixin:
     def get_wrap_key(self):
         return getattr(self.Meta, "wrap", "data")
 

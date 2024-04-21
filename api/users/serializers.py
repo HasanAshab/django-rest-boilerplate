@@ -3,8 +3,8 @@ from rest_framework import serializers
 from api.common.utils import (
     twilio_verification,
 )
-from api.common.serializers import (
-    WrapSerializerDataMixin,
+from api.common.mixins import (
+    WrapDataMixin,
 )
 from .models import User
 
@@ -25,7 +25,7 @@ class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
 class ProfileSerializer(
     serializers.ModelSerializer,
     UserLinksSerializerMixin,
-    WrapSerializerDataMixin,
+    WrapDataMixin,
 ):
     class Meta:
         model = User
@@ -83,7 +83,7 @@ class ListUserSerializer(
 
 class UserDetailsSerializer(
     UserLinksSerializerMixin,
-    WrapSerializerDataMixin,
+    WrapDataMixin,
     serializers.ModelSerializer,
 ):
     class Meta:
