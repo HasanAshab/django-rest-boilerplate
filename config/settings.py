@@ -217,7 +217,8 @@ ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_NOTIFICATIONS = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.STokenStrategy'
+# All-Auth : Headless
+HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.SessionTokenStrategy'
 
 # Client (Frontend) Url Manager
 CLIENT_DOMIAN = "localhost:5000"
