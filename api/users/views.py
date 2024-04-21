@@ -33,23 +33,16 @@ class UsersView(ListAPIView):
 from allauth.headless.base.views import AuthenticatedAPIView
 
 
+
 class ProfileView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
     def get_object(self):
         return self.request.user
-        
-class ProfileVie(RetrieveUpdateDestroyAPIView):
-    #permission_classes = (IsAuthenticated,)
-    serializer_class = ProfileSerializer
-
-    def get_object(self):
-        return self.request.user
 
     def perform_update(self, serializer):
-        self._check_role_change_permissions()
-        self._perform_email_change()
+        #self._check_role_change_permissions()
         serializer.save()
 
     def _check_role_change_permissions(
@@ -57,40 +50,30 @@ class ProfileVie(RetrieveUpdateDestroyAPIView):
     ):
         data = self.request.data
         user = self.get_object()
-        if "is_staff" in data:
-            user.assert_can(
-                "change_role_of_staff",
-                user,
-            )
-        if "is_superuser" in data:
-            user.assert_can(
-                "change_role_of_superuser",
-                user,
-            )
-
-    def _perform_email_change(self):
+        is_staff = data.get('is_staff')
+        is_superuser = data.get('is_superuser') 
+        
+        if is_superuser is True:
+            role = 'admin'
+        elif is_staff is True:
+            role = 'staff'
+        elif is_superuser is False and is_staff is False:
+            role = 'general_user'
+        
+        if role:
+            user.assert_can(f'make_{role}', user)
+        
+        # if "is_staff" in data:
+    
+    def _check_role_change_permissions(
+        self,
+    ):
         user = self.get_object()
-        new_email = self.request.data.pop("email", None)
-        if new_email and new_email != user.email:
-            email_address = self._change_email(
-                new_email,
-                commit=False,
-            )
-            email_address.send_confirmation(
-                self.request,
-                signup=False,
-            )
-
-    def _change_email(self, new_email, commit=False):
-        user = self.get_object()
-        user.email = new_email
-        if commit:
-            user.save()
-        email_address = EmailAddress.objects.get_primary(user)
-        email_address.email = new_email
-        email_address.verified = False
-        email_address.save()
-        return email_address
+        role = self.request.data.get('role')
+        if role:
+            user.assert_can(f'make_{role}', user)
+        
+        # if "is_staff" in data:
 
 
 class UserDetailsView(RetrieveUpdateDestroyAPIView):
