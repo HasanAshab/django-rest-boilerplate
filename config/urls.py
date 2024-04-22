@@ -1,11 +1,11 @@
-# from django.contrib import admin
+from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
 
 
 urlpatterns = [
-    path("api/jdjdj/", include('allauth.urls')),
-#     # path("api/admin/", admin.site.urls),
+    path("_allauth/", include('allauth.urls')),
+      path("api/admin/", admin.site.urls),
     path(
         "api/auth/",
         include("api.authentication.urls"),

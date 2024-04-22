@@ -9,19 +9,49 @@ from allauth.headless.account.views import (
     RequestPasswordResetView,
     ResetPasswordView,
 )
+from allauth.headless.mfa.views import (
+    AuthenticateView,
+    ReauthenticateView,
+    AuthenticatorsView,
+    ManageTOTPView,
+    ManageRecoveryCodesView,
+)
 
 
 client = Client.APP
 
-from allauth.headless.mfa.urls import build_urlpatterns
 
+
+mfa_urlpatterns = [
+    path(
+        "authenticate/",
+        AuthenticateView.as_api_view(client=client),
+        name="authenticate",
+    ),
+    path(
+        "reauthenticate/",
+        ReauthenticateView.as_api_view(client=client),
+        name="reauthenticate",
+    ),
+    path(
+        "authenticators/",
+        AuthenticatorsView.as_api_view(client=client),
+        name="authenticators",
+    ),
+    path(
+        "authenticators/totp/",
+        ManageTOTPView.as_api_view(client=client),
+        name="manage_totp",
+    ),
+    path(
+        "authenticators/recovery-codes/",
+        ManageRecoveryCodesView.as_api_view(client=client),
+        name="manage_recovery_codes",
+    ),
+]
 
 
 urlpatterns = [
-    path(
-        "",
-        include(build_urlpatterns(client))
-    ), 
     path(
         "signup",
         SignupView.as_api_view(client=client),
@@ -57,4 +87,5 @@ urlpatterns = [
         ResetPasswordView.as_api_view(client=client),
         name="confirm-reset-password",
     ),
+    path('two-factor/', include(mfa_urlpatterns))
 ]
