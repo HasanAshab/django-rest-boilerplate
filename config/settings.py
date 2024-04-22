@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.mfa",
+    "allauth.headless",
     "api.common",
     "api.authentication",
     "api.users",
@@ -218,6 +219,7 @@ ACCOUNT_CHANGE_EMAIL = True
 ACCOUNT_EMAIL_NOTIFICATIONS = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+MFA_TOTP_ISSUER = "App Name"
 # All-Auth : Headless
 HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.SessionTokenStrategy'
 
@@ -230,44 +232,22 @@ TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")
 TWILIO_VERIFY_SERVICE_SID = env("TWILIO_VERIFY_SERVICE_SID")
 
 
+# Log
 LOGGING = {
-
     'version': 1,
-
     'disable_existing_loggers': False,
-
     'handlers': {
-
-        'console': {
-
+        'db_query': {
             'level': 'DEBUG',
-
-            'class': 'logging.StreamHandler',
-
-        },
-
-        'file': {
-
-            'level': 'DEBUG',
-
             'class': 'logging.FileHandler',
-
-            'filename': 'django_queries.log',  # Choose a file name and path
-
+            'filename': 'tmp/db_queries.log',
         },
-
     },
-
     'loggers': {
         'django.db.backends': {
-
-            'handlers': ['file'],
-
+            'handlers': ['db_query'],
             'level': 'DEBUG',
-
             'propagate': False,
-
         },
-
     },
 }

@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from allauth.headless.constants import Client
 from allauth.headless.account.views import (
     SignupView,
     LoginView,
+    ReauthenticateView,
     SessionView,
     VerifyEmailView,
     RequestPasswordResetView,
@@ -12,7 +13,15 @@ from allauth.headless.account.views import (
 
 client = Client.APP
 
+from allauth.headless.mfa.urls import build_urlpatterns
+
+
+
 urlpatterns = [
+    path(
+        "",
+        include(build_urlpatterns(client))
+    ), 
     path(
         "signup",
         SignupView.as_api_view(client=client),
@@ -22,6 +31,11 @@ urlpatterns = [
         "login",
         LoginView.as_api_view(client=client),
         name="login",
+    ),
+    path(
+        "reauthenticate",
+        ReauthenticateView.as_api_view(client=client),
+        name="account_reauthenticate",
     ),
     path(
         "session",

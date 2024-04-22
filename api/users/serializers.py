@@ -101,11 +101,7 @@ class UserDetailsSerializer(
 
 
 class PhoneNumberSerializer(serializers.ModelSerializer):
-    otp = serializers.CharField(
-        max_length=6,
-        min_length=6,
-        required=False,
-    )
+    otp = serializers.CharField(required=False)
 
     class Meta:
         model = User

@@ -1,4 +1,5 @@
-from allauth.headless.tokens.sessions import BaseSessionTokenStrategy
+from allauth.headless.tokens.sessions import \
+    SessionTokenStrategy as BaseSessionTokenStrategy
 from knox.views import LoginView
 
 
