@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.mfa",
     "allauth.headless",
+    "allauth.socialaccount.providers.google",
     "api.common",
     "api.authentication",
     "api.users",
@@ -228,6 +229,15 @@ ACCOUNT_EMAIL_NOTIFICATIONS = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 MFA_TOTP_ISSUER = "App Name"
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '574177695590-6ta430f91sjtfmepvjskhvrf81ncbo0c.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
 # All-Auth : Headless
 HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.SessionTokenStrategy'
 

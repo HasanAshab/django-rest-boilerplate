@@ -21,7 +21,6 @@ from allauth.headless.mfa.views import (
 client = Client.APP
 
 
-
 mfa_urlpatterns = [
     path(
         "authenticate/",
@@ -51,7 +50,9 @@ mfa_urlpatterns = [
 ]
 
 
+from allauth.headless.socialaccount.urls import build_urlpatterns
 urlpatterns = [
+    path("", include(build_urlpatterns(client))),
     path(
         "signup",
         SignupView.as_api_view(client=client),
