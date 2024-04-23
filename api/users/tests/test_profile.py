@@ -37,6 +37,20 @@ class ProfileTestCase(APITestCase):
             status.HTTP_200_OK,
         )
         self.assertEqual(response.data, profile)
+    
+    def test_update_profile(self):
+        name = 'New Name' 
+        username = 'newusername' 
+        
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, {'name': name, 'username': username})
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(self.user.name, name)
+        self.assertEqual(self.user.username, username)
 
     def test_delete_account(
         self,
