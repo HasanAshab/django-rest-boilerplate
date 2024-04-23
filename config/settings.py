@@ -1,4 +1,3 @@
-# flake8: noqa
 """
 Django settings for config project.
 
