@@ -4,8 +4,7 @@ from django.http import JsonResponse
 
 
 urlpatterns = [
-    path("_allauth/", include('allauth.urls')),
-      path("api/admin/", admin.site.urls),
+    path("admin/", admin.site.urls),
     path(
         "api/auth/",
         include("api.authentication.urls"),

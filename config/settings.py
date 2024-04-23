@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     "allauth.mfa",
     "allauth.headless",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.twitter",
     "api.common",
     "api.authentication",
     "api.users",
@@ -220,7 +222,6 @@ KNOX_TOKEN_MODEL = "knox.AuthToken"
 
 
 # All-Auth
-ACCOUNT_ADAPTER = "api.authentication.adapter.AccountAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
@@ -232,17 +233,38 @@ MFA_TOTP_ISSUER = "App Name"
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '574177695590-6ta430f91sjtfmepvjskhvrf81ncbo0c.apps.googleusercontent.com',
-            'secret': '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',
-            'key': ''
-        }
-    }
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
+            'key': '',
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+            'name'
+        ],
+    },
+    'facebook': {
+        'APP': {
+            'client_id': env('FACEBOOK_CLIENT_ID'),
+            'secret': env('FACEBOOK_CLIENT_SECRET'),
+            'key': '',
+        },
+    },
+    'twitter': {
+        'APP': {
+            'client_id': env('TWITTER_CLIENT_ID'),
+            'secret': env('TWITTER_CLIENT_SECRET'),
+            'key': '',
+        },
+    },
 }
 # All-Auth : Headless
+HEADLESS_ONLY = True
 HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.SessionTokenStrategy'
-
-# Client (Frontend) Url Manager
-CLIENT_DOMIAN = "localhost:5000"
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": "/account/verify-email/{key}",
+    "account_reset_password_from_key": "/account/password/reset/{key}",
+}
 
 # Twilio
 TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID")

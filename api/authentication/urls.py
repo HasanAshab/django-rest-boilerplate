@@ -56,12 +56,12 @@ urlpatterns = [
     path(
         "signup",
         SignupView.as_api_view(client=client),
-        name="signup",
+        name="account_signup",
     ),
     path(
         "login",
         LoginView.as_api_view(client=client),
-        name="login",
+        name="account_login",
     ),
     path(
         "reauthenticate",

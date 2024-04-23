@@ -14,7 +14,7 @@ cryptography==42.0.5
 defusedxml==0.7.1
 distlib==0.3.8
 Django==4.2.11
-django-allauth @ git+https://github.com/pennersr/django-allauth.git@3740e0f8ed11f915451435ca73511ff74404864c
+django-allauth @ git+https://github.com/pennersr/django-allauth.git@3582dea795903766831c59400c77eb0c90743001
 django-cors-headers==4.3.1
 django-environ==0.11.2
 django-extensions==3.2.3
@@ -45,6 +45,7 @@ phonenumbers==8.13.34
 phonenumberslite==8.13.34
 pillow==10.3.0
 platformdirs==4.2.0
+psycopg==3.1.18
 pycodestyle==2.11.1
 pycparser==2.22
 pyflakes==3.2.0
