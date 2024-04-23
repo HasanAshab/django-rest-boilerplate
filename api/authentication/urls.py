@@ -37,7 +37,7 @@ mfa_urlpatterns = [
 
 social_urlpatterns = [
     path(
-        'providers',
+        "providers",
         socialaccount_views.ManageProvidersView.as_api_view(client=client),
         name="manage_providers",
     ),

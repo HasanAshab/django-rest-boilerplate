@@ -1,4 +1,3 @@
-from django.core import mail
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import (
@@ -37,13 +36,15 @@ class ProfileTestCase(APITestCase):
             status.HTTP_200_OK,
         )
         self.assertEqual(response.data, profile)
-    
+
     def test_update_profile(self):
-        name = 'New Name' 
-        username = 'newusername' 
-        
+        name = "New Name"
+        username = "newusername"
+
         self.client.force_authenticate(user=self.user)
-        response = self.client.patch(self.url, {'name': name, 'username': username})
+        response = self.client.patch(
+            self.url, {"name": name, "username": username}
+        )
 
         self.assertEqual(
             response.status_code,

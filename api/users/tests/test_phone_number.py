@@ -1,16 +1,11 @@
 from unittest.mock import patch
-from django.core import mail
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import (
     APITestCase,
 )
-from api.users.models import User
 from api.users.factories import (
     UserFactory,
-)
-from api.users.serializers import (
-    ProfileSerializer,
 )
 
 
