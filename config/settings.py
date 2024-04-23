@@ -121,11 +121,11 @@ DATABASES = {
     },
     "pg": {
         "ENGINE": "django.db.backends.postgresql",
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD')
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
     },
 }
 
@@ -178,6 +178,20 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static"
 
+
+# Log
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "db_query": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "tmp/logs/db_queries.log",
+        },
+    },
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -198,9 +212,7 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSION": "v1",
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.AcceptHeaderVersioning",
     # Auth
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        'knox.auth.TokenAuthentication',
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
     # Pagination
@@ -231,36 +243,32 @@ ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 MFA_TOTP_ISSUER = "App Name"
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': env('GOOGLE_CLIENT_ID'),
-            'secret': env('GOOGLE_CLIENT_SECRET'),
-            'key': '',
+    "google": {
+        "APP": {
+            "client_id": env("GOOGLE_CLIENT_ID"),
+            "secret": env("GOOGLE_CLIENT_SECRET"),
+            "key": "",
         },
-        'SCOPE': [
-            'profile',
-            'email',
-            'name'
-        ],
+        "SCOPE": ["profile", "email", "name"],
     },
-    'facebook': {
-        'APP': {
-            'client_id': env('FACEBOOK_CLIENT_ID'),
-            'secret': env('FACEBOOK_CLIENT_SECRET'),
-            'key': '',
+    "facebook": {
+        "APP": {
+            "client_id": env("FACEBOOK_CLIENT_ID"),
+            "secret": env("FACEBOOK_CLIENT_SECRET"),
+            "key": "",
         },
     },
-    'twitter': {
-        'APP': {
-            'client_id': env('TWITTER_CLIENT_ID'),
-            'secret': env('TWITTER_CLIENT_SECRET'),
-            'key': '',
+    "twitter": {
+        "APP": {
+            "client_id": env("TWITTER_CLIENT_ID"),
+            "secret": env("TWITTER_CLIENT_SECRET"),
+            "key": "",
         },
     },
 }
 # All-Auth : Headless
 HEADLESS_ONLY = True
-HEADLESS_TOKEN_STRATEGY = 'api.authentication.tokens.SessionTokenStrategy'
+HEADLESS_TOKEN_STRATEGY = "api.authentication.tokens.SessionTokenStrategy"
 HEADLESS_FRONTEND_URLS = {
     "account_confirm_email": "/account/verify-email/{key}",
     "account_reset_password_from_key": "/account/password/reset/{key}",
@@ -270,24 +278,3 @@ HEADLESS_FRONTEND_URLS = {
 TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")
 TWILIO_VERIFY_SERVICE_SID = env("TWILIO_VERIFY_SERVICE_SID")
-
-
-# Log
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'db_query': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'tmp/db_queries.log',
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['db_query'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}

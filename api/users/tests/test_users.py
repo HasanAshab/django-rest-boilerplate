@@ -22,8 +22,7 @@ class UsersTestCase(APITestCase):
             "user-details",
             kwargs={"username": user.username},
         )
-        
-        
+
     def test_list_users_needs_authentication(
         self,
     ):
@@ -62,7 +61,7 @@ class UsersTestCase(APITestCase):
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
         )
-    
+
     def test_retrieve_user(self):
         user2 = UserFactory()
         url = self._reverse_user_url(user2)
@@ -76,7 +75,7 @@ class UsersTestCase(APITestCase):
             status.HTTP_200_OK,
         )
         self.assertEqual(response.data, data)
-   
+
     def test_deleting_user_needs_authentication(
         self,
     ):
@@ -89,7 +88,7 @@ class UsersTestCase(APITestCase):
             response.status_code,
             status.HTTP_401_UNAUTHORIZED,
         )
-     
+
     @patch("api.authentication.mixins.HasPolicy.assert_can")
     def test_delete_user(self, mocked_policy_checker_method):
         user2 = UserFactory()
@@ -104,7 +103,9 @@ class UsersTestCase(APITestCase):
             status.HTTP_204_NO_CONTENT,
         )
         mocked_policy_checker_method.assert_called_once()
-        action, checked_user = mocked_policy_checker_method._mock_call_args.args
-        self.assertEqual(action, 'delete')
+        action, checked_user = (
+            mocked_policy_checker_method._mock_call_args.args
+        )
+        self.assertEqual(action, "delete")
         self.assertEqual(checked_user.username, user2.username)
         self.assertTrue(user_deleted)

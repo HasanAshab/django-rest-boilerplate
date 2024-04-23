@@ -42,7 +42,7 @@ class UserDetailsView(RetrieveDestroyAPIView):
     queryset = User.objects.all()
     lookup_field = "username"
     serializer_class = UserDetailsSerializer
-    
+
     def perform_destroy(self, instance):
         self.request.user.assert_can("delete", instance)
         super().perform_destroy(instance)
