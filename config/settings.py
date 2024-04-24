@@ -230,7 +230,10 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'app description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    'DEFAULT_GENERATOR_CLASS': 'drf_spectacular.generators.SchemaGenerator',
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums',
+        'api.docs.hooks.postprocess_components'
+    ],
 }
 
 # Knox (For Auth Token Management)

@@ -9,8 +9,11 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from drf_spectacular.utils import extend_schema
 from allauth.headless.account.views import ChangePasswordView
+from api.docs.utils import SuccessfulApiResponse
 from .models import User
+from .permissions import DeleteUserPermission
 from .serializers import (
     ListUserSerializer,
     UserDetailsSerializer,
@@ -30,21 +33,16 @@ class UsersView(ListAPIView):
 class ProfileView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
-
+    
     def get_object(self):
         return self.request.user
-    
+ 
 class UserDetailsView(RetrieveDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, DeleteUserPermission)
     queryset = User.objects.all()
     lookup_field = "username"
     serializer_class = UserDetailsSerializer
-
-    def perform_destroy(self, instance):
-        self.request.user.assert_can("delete", instance)
-        super().perform_destroy(instance)
-
-
+    
 class PasswordChangeView(ChangePasswordView):
     http_method_names = ("patch",)
 
@@ -54,14 +52,22 @@ class PasswordChangeView(ChangePasswordView):
 
 class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = None
-    
+
     def get_object(self):
         return self.request.user
-
+    
+    @extend_schema(
+        request=PhoneNumberSerializer,
+        responses={
+             200: SuccessfulApiResponse(),
+             202: SuccessfulApiResponse(
+                 'Verification code sent to the phone number'
+                ),
+        }
+    )
     def patch(self, request):
         serializer = PhoneNumberSerializer(
-            request.user,
+            self.get_object(),
             data=request.data,
         )
         serializer.is_valid(raise_exception=True)

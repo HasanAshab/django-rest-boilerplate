@@ -34,7 +34,7 @@ class UserModel(AbstractUser, HasPolicy):
     _policy = UserPolicy()
 
     @property
-    def is_email_verified(self):
+    def is_email_verified(self) -> bool:
         return self.emailaddress_set.filter(
             primary=True, verified=True
         ).exists()
