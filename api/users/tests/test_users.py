@@ -89,23 +89,15 @@ class UsersTestCase(APITestCase):
             status.HTTP_401_UNAUTHORIZED,
         )
 
-    @patch("api.authentication.mixins.HasPolicy.assert_can")
-    def test_delete_user(self, mocked_policy_checker_method):
-        user2 = UserFactory()
-        url = self._reverse_user_url(user2)
+    def test_delete_user(self):
+        url = self._reverse_user_url(self.user)
 
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(url)
-        user_deleted = not User.objects.filter(pk=user2.pk).exists()
+        user_deleted = not User.objects.filter(pk=self.user.pk).exists()
 
         self.assertEqual(
             response.status_code,
             status.HTTP_204_NO_CONTENT,
         )
-        mocked_policy_checker_method.assert_called_once()
-        action, checked_user = (
-            mocked_policy_checker_method._mock_call_args.args
-        )
-        self.assertEqual(action, "delete")
-        self.assertEqual(checked_user.username, user2.username)
         self.assertTrue(user_deleted)

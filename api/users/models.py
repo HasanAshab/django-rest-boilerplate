@@ -12,11 +12,9 @@ from phonenumber_field.modelfields import (
     PhoneNumberField,
 )
 from api.common.utils import LazyProxy
-from api.authentication.mixins import HasPolicy
-from .policies import UserPolicy
 
 
-class UserModel(AbstractUser, HasPolicy):
+class UserModel(AbstractUser):
     first_name = None
     last_name = None
     name = models.CharField(
@@ -31,8 +29,7 @@ class UserModel(AbstractUser, HasPolicy):
         max_length=100,
         null=True,
     )
-    _policy = UserPolicy()
-
+    
     @property
     def is_email_verified(self) -> bool:
         return self.emailaddress_set.filter(

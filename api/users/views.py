@@ -29,7 +29,6 @@ class UsersView(ListAPIView):
     serializer_class = ListUserSerializer
     pagination_class = UserCursorPagination
 
-
 class ProfileView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
@@ -48,7 +47,6 @@ class PasswordChangeView(ChangePasswordView):
 
     def patch(self, *args, **kwargs):
         return super().post(*args, **kwargs)
-
 
 class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
