@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.permissions import (
     IsAuthenticated,
 )
@@ -9,9 +10,6 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 from allauth.headless.account.views import ChangePasswordView
-from api.common.response import (
-    APIResponse,
-)
 from .models import User
 from .serializers import (
     ListUserSerializer,
@@ -35,8 +33,7 @@ class ProfileView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user
-
-
+    
 class UserDetailsView(RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
@@ -57,7 +54,8 @@ class PasswordChangeView(ChangePasswordView):
 
 class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
-
+    serializer_class = None
+    
     def get_object(self):
         return self.request.user
 
@@ -69,8 +67,8 @@ class PhoneNumberView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         if "otp" in serializer.validated_data:
-            return APIResponse("Phone number updated!")
-        return APIResponse(
+            return Response("Phone number updated!")
+        return Response(
             "Verification code sent to the phone number!",
             status=status.HTTP_202_ACCEPTED,
         )
@@ -79,4 +77,4 @@ class PhoneNumberView(APIView):
         user = self.get_object()
         user.phone_number = None
         user.save()
-        return APIResponse(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

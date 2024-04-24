@@ -3,30 +3,12 @@ from rest_framework import serializers
 from api.common.utils import (
     twilio_verification,
 )
-from api.common.mixins import (
-    WrapDataMixin,
-)
 from .models import User
 
-
-class UserLinksSerializerMixin(metaclass=serializers.SerializerMetaclass):
-    links = serializers.SerializerMethodField()
-
-    def get_links(self, user):
-        return {
-            "avatar": (user.avatar.url if user.avatar else None),
-            **self.additional_links(user),
-        }
-
-    def additional_links(self, user):
-        return {}
+from drf_spectacular.utils import extend_schema_field
 
 
-class ProfileSerializer(
-    serializers.ModelSerializer,
-    UserLinksSerializerMixin,
-    WrapDataMixin,
-):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
@@ -40,7 +22,6 @@ class ProfileSerializer(
             "date_joined",
             "is_superuser",
             "is_staff",
-            "links",
         )
         read_only_fields = (
             "date_joined",
@@ -52,53 +33,25 @@ class ProfileSerializer(
             "is_superuser",
             "phone_number",
         )
-        extra_kwargs = {
-            "avatar": {
-                "read_only": False,
-                "write_only": True,
-            }
-        }
-        exclude_wrap_fields = ("links",)
 
-
-class ListUserSerializer(
-    serializers.ModelSerializer,
-    UserLinksSerializerMixin,
-):
+class ListUserSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = User
-        fields = (
-            "id",
-            "username",
-            "links",
-        )
+        fields = ("id", "username", "avatar")
 
-    def additional_links(self, obj):
-        profile_url = reverse(
-            "user-details",
-            kwargs={"username": obj.username},
-        )
-        return {"profile": profile_url}
-
-
-class UserDetailsSerializer(
-    UserLinksSerializerMixin,
-    WrapDataMixin,
-    serializers.ModelSerializer,
-):
+class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
             "id",
             "username",
             "name",
+            "avatar",
             "date_joined",
             "is_superuser",
             "is_staff",
-            "links",
         )
-        exclude_wrap_fields = ("links",)
-
 
 class PhoneNumberSerializer(serializers.ModelSerializer):
     otp = serializers.CharField(required=False)

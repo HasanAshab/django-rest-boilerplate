@@ -1,11 +1,6 @@
-# pagination.py
-from rest_framework.pagination import (
+from api.common.pagination import (
     CursorPagination,
 )
-from api.common.pagination import (
-    BasePagination,
-)
 
-
-class UserCursorPagination(BasePagination, CursorPagination):
+class UserCursorPagination(CursorPagination):
     ordering = "date_joined"

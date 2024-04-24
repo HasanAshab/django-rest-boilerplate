@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_spectacular",
     "knox",
     "allauth",
     "allauth.account",
@@ -182,11 +183,11 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "db_query": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "tmp/logs/db_queries.log",
-        },
+#         "db_query": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": "tmp/logs/db_queries.log",
+#         },
     },
 }
 
@@ -213,15 +214,24 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
-    # Pagination
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.CursorPagination",
-    "PAGE_SIZE": 15,
+    # Response
+    'DEFAULT_RENDERER_CLASSES': [
+        'api.common.renderers.JSONRenderer',
+    ],
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     # Docs
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+# Api Docs
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'App Name',
+    'DESCRIPTION': 'app description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'DEFAULT_GENERATOR_CLASS': 'drf_spectacular.generators.SchemaGenerator',
+}
 
 # Knox (For Auth Token Management)
 REST_KNOX = {

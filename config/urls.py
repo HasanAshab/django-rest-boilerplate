@@ -3,8 +3,13 @@ from django.urls import path, include
 from django.http import JsonResponse
 
 
+    
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path(
+        "api/docs/",
+        include("api.docs.urls"),
+    ),
     path(
         "api/auth/",
         include("api.authentication.urls"),
