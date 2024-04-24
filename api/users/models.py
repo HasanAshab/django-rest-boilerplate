@@ -29,7 +29,7 @@ class UserModel(AbstractUser):
         max_length=100,
         null=True,
     )
-    
+
     @property
     def is_email_verified(self) -> bool:
         return self.emailaddress_set.filter(

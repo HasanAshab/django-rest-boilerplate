@@ -1,11 +1,8 @@
-from django.urls import reverse
 from rest_framework import serializers
 from api.common.utils import (
     twilio_verification,
 )
 from .models import User
-
-from drf_spectacular.utils import extend_schema_field
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -34,11 +31,13 @@ class ProfileSerializer(serializers.ModelSerializer):
             "phone_number",
         )
 
+
 class ListUserSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = User
         fields = ("id", "username", "avatar")
+
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,6 +51,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             "is_superuser",
             "is_staff",
         )
+
 
 class PhoneNumberSerializer(serializers.ModelSerializer):
     otp = serializers.CharField(required=False)

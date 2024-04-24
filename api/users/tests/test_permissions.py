@@ -6,9 +6,10 @@ from api.users.factories import (
     UserFactory,
 )
 
+
 class DeleteUserPermissionTestCase(TestCase):
     permission = DeleteUserPermission()
-    
+
     def test_user_can_delete_own_account(
         self,
     ):

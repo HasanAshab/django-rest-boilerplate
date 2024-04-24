@@ -29,39 +29,43 @@ class UsersView(ListAPIView):
     serializer_class = ListUserSerializer
     pagination_class = UserCursorPagination
 
+
 class ProfileView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
-    
+
     def get_object(self):
         return self.request.user
- 
+
+
 class UserDetailsView(RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticated, DeleteUserPermission)
     queryset = User.objects.all()
     lookup_field = "username"
     serializer_class = UserDetailsSerializer
-    
+
+
 class PasswordChangeView(ChangePasswordView):
     http_method_names = ("patch",)
 
     def patch(self, *args, **kwargs):
         return super().post(*args, **kwargs)
 
+
 class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
-    
+
     @extend_schema(
         request=PhoneNumberSerializer,
         responses={
-             200: SuccessfulApiResponse(),
-             202: SuccessfulApiResponse(
-                 'Verification code sent to the phone number'
-                ),
-        }
+            200: SuccessfulApiResponse(),
+            202: SuccessfulApiResponse(
+                "Verification code sent to the phone number"
+            ),
+        },
     )
     def patch(self, request):
         serializer = PhoneNumberSerializer(

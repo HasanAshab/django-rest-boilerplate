@@ -9,7 +9,7 @@ class DeleteUserPermission(permissions.BasePermission):
         if request.method == HTTPMethod.DELETE:
             return self.can_delete_user(request.user, obj)
         return True
-        
+
     def can_delete_user(self, user, target_user):
         return (
             user == target_user

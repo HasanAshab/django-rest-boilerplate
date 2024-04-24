@@ -183,11 +183,11 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-#         "db_query": {
-#             "level": "DEBUG",
-#             "class": "logging.FileHandler",
-#             "filename": "tmp/logs/db_queries.log",
-#         },
+        #         "db_query": {
+        #             "level": "DEBUG",
+        #             "class": "logging.FileHandler",
+        #             "filename": "tmp/logs/db_queries.log",
+        #         },
     },
 }
 
@@ -215,8 +215,8 @@ REST_FRAMEWORK = {
     # Exception
     "EXCEPTION_HANDLER": "api.common.exceptions.handler",
     # Response
-    'DEFAULT_RENDERER_CLASSES': [
-        'api.common.renderers.JSONRenderer',
+    "DEFAULT_RENDERER_CLASSES": [
+        "api.common.renderers.JSONRenderer",
     ],
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
@@ -226,13 +226,13 @@ REST_FRAMEWORK = {
 
 # Api Docs
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'App Name',
-    'DESCRIPTION': 'app description',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    'POSTPROCESSING_HOOKS': [
-        'drf_spectacular.hooks.postprocess_schema_enums',
-        'api.docs.hooks.postprocess_components'
+    "TITLE": "App Name",
+    "DESCRIPTION": "app description",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+        "api.docs.hooks.postprocess_components",
     ],
 }
 
