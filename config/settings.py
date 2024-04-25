@@ -221,7 +221,7 @@ REST_FRAMEWORK = {
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     # Docs
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "api.docs.openapi.AutoSchema",
 }
 
 # Api Docs
@@ -230,10 +230,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "app description",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "POSTPROCESSING_HOOKS": [
-        "drf_spectacular.hooks.postprocess_schema_enums",
-        "api.docs.hooks.postprocess_components",
-    ],
 }
 
 # Knox (For Auth Token Management)
