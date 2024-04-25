@@ -54,6 +54,7 @@ class PasswordChangeView(ChangePasswordView):
 
 class PhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
+    serializer_class = None
 
     def get_object(self):
         return self.request.user

@@ -230,6 +230,10 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "app description",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "EXTERNAL_DOCS": {
+        "url": "https://allauth.org/docs/draft-api",
+        "description": "Authentication",
+    },
 }
 
 # Knox (For Auth Token Management)
