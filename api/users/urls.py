@@ -14,32 +14,32 @@ client = Client.APP
 
 urlpatterns = [
     path(
-        "",
+        "users/",
         UsersView.as_view(),
         name="users",
     ),
     path(
-        "me/",
+        "users/me/",
         ProfileView.as_view(),
         name="profile",
     ),
     path(
-        "me/email/",
+        "users/me/email/",
         ManageEmailView.as_api_view(client=client),
         name="manage_email",
     ),
     path(
-        "me/password/",
+        "users/me/password/",
         PasswordChangeView.as_api_view(client=client),
         name="password",
     ),
     path(
-        "me/phone-number/",
+        "users/me/phone-number/",
         PhoneNumberView.as_view(),
         name="phone-number",
     ),
     path(
-        "<str:username>/",
+        "users/<str:username>/",
         UserDetailsView.as_view(),
         name="user-details",
     ),

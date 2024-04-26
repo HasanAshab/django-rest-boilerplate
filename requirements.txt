@@ -13,7 +13,7 @@ click==8.1.7
 cryptography==42.0.5
 defusedxml==0.7.1
 distlib==0.3.8
-Django==4.2.11
+Django==5
 django-allauth @ git+https://github.com/pennersr/django-allauth.git@05aa77c805f3332caee30d2c4e42f3b21edd2f65
 django-cors-headers==4.3.1
 django-environ==0.11.2
@@ -51,8 +51,6 @@ psycopg==3.1.18
 pycodestyle==2.11.1
 pycparser==2.22
 pyflakes==3.2.0
-pyinstaller==4.0
-pyinstaller-hooks-contrib==2022.12
 PyJWT==2.8.0
 pypng==0.20220715.0
 python-dateutil==2.9.0.post0
