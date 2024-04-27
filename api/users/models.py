@@ -18,7 +18,6 @@ from phonenumber_field.modelfields import (
 from api.common.utils import LazyProxy
 
 
-
 class UserModel(AbstractUser):
     username_validator = UnicodeUsernameValidator()
 
@@ -34,15 +33,14 @@ class UserModel(AbstractUser):
         max_length=settings.USERNAME_MAX_LENGTH,
         unique=True,
         help_text=_(
-            f"Required. {settings.USERNAME_MAX_LENGTH} characters or fewer. Letters, digits and @/./+/-/_ only."
+            f"Required. {settings.USERNAME_MAX_LENGTH} characters or fewer."
+            "Letters, digits and @/./+/-/_ only."
         ),
         validators=[username_validator],
         error_messages={
             "unique": _("A user with that username already exists."),
         },
     )
-
-
     phone_number = PhoneNumberField(_("Phone Number"), null=True)
     avatar = models.ImageField(
         _("Avatar"),
@@ -51,7 +49,6 @@ class UserModel(AbstractUser):
         null=True,
     )
 
-    
     @property
     def is_email_verified(self) -> bool:
         return self.emailaddress_set.filter(
