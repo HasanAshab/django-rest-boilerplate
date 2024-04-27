@@ -11,7 +11,7 @@ from rest_framework.generics import (
 )
 from drf_spectacular.utils import extend_schema
 from allauth.headless.account.views import ChangePasswordView
-from api.docs.utils import SuccessfulApiResponse
+from api.docs.utils import successful_api_response
 from .models import User
 from .permissions import DeleteUserPermission
 from .serializers import (
@@ -62,9 +62,9 @@ class PhoneNumberView(APIView):
     @extend_schema(
         request=PhoneNumberSerializer,
         responses={
-            200: SuccessfulApiResponse(),
-            202: SuccessfulApiResponse(
-                "Verification code sent to the phone number"
+            200: successful_api_response(),
+            202: successful_api_response(
+                description="Verification code sent to the phone number"
             ),
         },
     )
