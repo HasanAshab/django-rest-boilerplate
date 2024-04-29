@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
+    "drf_standardized_errors",
     "knox",
     "allauth",
     "allauth.account",
@@ -213,7 +214,7 @@ REST_FRAMEWORK = {
     # Auth
     "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
     # Exception
-    "EXCEPTION_HANDLER": "api.common.exceptions.handler",
+    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
     # Response
     "DEFAULT_RENDERER_CLASSES": [
         "api.common.renderers.JSONRenderer",
@@ -234,6 +235,23 @@ SPECTACULAR_SETTINGS = {
         "url": "https://allauth.org/docs/draft-api",
         "description": "Authentication",
     },
+    "SCHEMA_PATH_PREFIX": r"/api/",
+    "ENUM_NAME_OVERRIDES": {
+        "ValidationErrorEnum": "drf_standardized_errors.openapi_serializers.ValidationErrorEnum.choices",
+        "ClientErrorEnum": "drf_standardized_errors.openapi_serializers.ClientErrorEnum.choices",
+        "ServerErrorEnum": "drf_standardized_errors.openapi_serializers.ServerErrorEnum.choices",
+        "ErrorCode401Enum": "drf_standardized_errors.openapi_serializers.ErrorCode401Enum.choices",
+        "ErrorCode403Enum": "drf_standardized_errors.openapi_serializers.ErrorCode403Enum.choices",
+        "ErrorCode404Enum": "drf_standardized_errors.openapi_serializers.ErrorCode404Enum.choices",
+        "ErrorCode405Enum": "drf_standardized_errors.openapi_serializers.ErrorCode405Enum.choices",
+        "ErrorCode406Enum": "drf_standardized_errors.openapi_serializers.ErrorCode406Enum.choices",
+        "ErrorCode415Enum": "drf_standardized_errors.openapi_serializers.ErrorCode415Enum.choices",
+        "ErrorCode429Enum": "drf_standardized_errors.openapi_serializers.ErrorCode429Enum.choices",
+        "ErrorCode500Enum": "drf_standardized_errors.openapi_serializers.ErrorCode500Enum.choices",
+    },
+    "POSTPROCESSING_HOOKS": (
+        "drf_standardized_errors.openapi_hooks.postprocess_schema_enums",
+    ),
 }
 
 # Knox (For Auth Token Management)
