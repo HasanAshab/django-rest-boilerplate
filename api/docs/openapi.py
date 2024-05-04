@@ -9,25 +9,24 @@ class AutoSchema(BaseAutoSchema):
         response = super()._get_response_for_code(
             serializer, status_code, media_types, direction
         )
-
         if isinstance(serializer, OpenApiResponse):
             serializer = serializer.response
 
         if not (content := response.get("content")):
-
             return response
         if "application/json" not in content:
             return response
 
         schema = content["application/json"]["schema"]
+
         reference = schema.get("$ref", schema.get("items", {}).get("$ref"))
         if not reference:
             return response
+
         is_paginated_response = reference.startswith(
             "#/components/schemas/Paginated"
         )
         is_error_response = "ErrorResponse" in reference
-
         if not getattr(
             serializer,
             "should_format",

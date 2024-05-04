@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 from api.common.utils import (
     twilio_verification,
@@ -32,11 +33,49 @@ class ProfileSerializer(serializers.ModelSerializer):
         )
 
 
-class ListUserSerializer(serializers.ModelSerializer):
+class LinkField(serializers.CharField):
+    pass
+
+
+class LinkMethodField(serializers.SerializerMethodField):
+    def bind(self, field_name, parent):
+        if self.method_name is None:
+            self.method_name = f"get_{field_name}_link"
+
+        super().bind(field_name, parent)
+
+
+class LinksSerializerMixin:
+    @property
+    def _link_fields(self):
+        return [
+            field
+            for field in self._readable_fields
+            if isinstance(field, (LinkField, LinkMethodField))
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["links"] = {
+            field.field_name: representation.pop(field.field_name)
+            for field in self._link_fields
+        }
+        return representation
+
+
+class ListUserSerializer(LinksSerializerMixin, serializers.ModelSerializer):
+    self = LinkMethodField()
+    avatar = LinkMethodField()
 
     class Meta:
         model = User
-        fields = ("id", "username", "avatar")
+        fields = ("id", "username", "self", "avatar")
+
+    def get_self_link(self, user):
+        return reverse("user-details", kwargs={"username": user.username})
+
+    def get_avatar_link(self, user):
+        return user.avatar.url if user.avatar else None
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
