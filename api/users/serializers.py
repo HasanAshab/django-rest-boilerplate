@@ -5,23 +5,7 @@ from api.common.utils import (
     twilio_verification,
 )
 from .models import User
-
-
-class UserAvatarLinkSerializerMixin(metaclass=serializers.SerializerMetaclass):
-    links = serializers.SerializerMethodField()
-
-    @extend_schema_field(
-        inline_serializer(
-            name="UserAvatarLink",
-            fields={
-                "avatar": serializers.URLField(),
-            },
-        )
-    )
-    def get_links(self, user):
-        return {
-            "avatar": user.avatar if user.avatar else None,
-        }
+from .mixins import UserAvatarLinkSerializerMixin
 
 
 class ProfileSerializer(
