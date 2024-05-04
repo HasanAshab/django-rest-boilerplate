@@ -1,12 +1,32 @@
 from django.urls import reverse
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field, inline_serializer
 from api.common.utils import (
     twilio_verification,
 )
 from .models import User
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class UserAvatarLinkSerializerMixin(metaclass=serializers.SerializerMetaclass):
+    links = serializers.SerializerMethodField()
+
+    @extend_schema_field(
+        inline_serializer(
+            name="UserAvatarLink",
+            fields={
+                "avatar": serializers.URLField(),
+            },
+        )
+    )
+    def get_links(self, user):
+        return {
+            "avatar": user.avatar if user.avatar else None,
+        }
+
+
+class ProfileSerializer(
+    UserAvatarLinkSerializerMixin, serializers.ModelSerializer
+):
     class Meta:
         model = User
         fields = (
@@ -20,6 +40,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "date_joined",
             "is_superuser",
             "is_staff",
+            "links",
         )
         read_only_fields = (
             "date_joined",
@@ -31,54 +52,37 @@ class ProfileSerializer(serializers.ModelSerializer):
             "is_superuser",
             "phone_number",
         )
+        extra_kwargs = {"avatar": {"write_only": True}}
 
 
-class LinkField(serializers.CharField):
-    pass
-
-
-class LinkMethodField(serializers.SerializerMethodField):
-    def bind(self, field_name, parent):
-        if self.method_name is None:
-            self.method_name = f"get_{field_name}_link"
-
-        super().bind(field_name, parent)
-
-
-class LinksSerializerMixin:
-    @property
-    def _link_fields(self):
-        return [
-            field
-            for field in self._readable_fields
-            if isinstance(field, (LinkField, LinkMethodField))
-        ]
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["links"] = {
-            field.field_name: representation.pop(field.field_name)
-            for field in self._link_fields
-        }
-        return representation
-
-
-class ListUserSerializer(LinksSerializerMixin, serializers.ModelSerializer):
-    self = LinkMethodField()
-    avatar = LinkMethodField()
-
+class ListUserSerializer(
+    UserAvatarLinkSerializerMixin, serializers.ModelSerializer
+):
     class Meta:
         model = User
-        fields = ("id", "username", "self", "avatar")
+        fields = ("id", "username", "links")
 
-    def get_self_link(self, user):
-        return reverse("user-details", kwargs={"username": user.username})
+    @extend_schema_field(
+        inline_serializer(
+            name="ListUserLinks",
+            fields={
+                "self": serializers.URLField(),
+                "avatar": serializers.URLField(),
+            },
+        )
+    )
+    def get_links(self, user):
+        return {
+            **super().get_links(user),
+            "self": reverse(
+                "user-details", kwargs={"username": user.username}
+            ),
+        }
 
-    def get_avatar_link(self, user):
-        return user.avatar.url if user.avatar else None
 
-
-class UserDetailsSerializer(serializers.ModelSerializer):
+class UserDetailsSerializer(
+    UserAvatarLinkSerializerMixin, serializers.ModelSerializer
+):
     class Meta:
         model = User
         fields = (
@@ -89,7 +93,9 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             "date_joined",
             "is_superuser",
             "is_staff",
+            "links",
         )
+        extra_kwargs = {"avatar": {"write_only": True}}
 
 
 class PhoneNumberSerializer(serializers.ModelSerializer):
