@@ -33,11 +33,11 @@ class StandardizedAutoSchema(BaseAutoSchema):
         ):
             return response
 
-        formatted_schema = self.standardize_response_schema(schema)
+        formatted_schema = self._standardize_response_schema(schema)
         content["application/json"]["schema"] = formatted_schema
         return response
 
-    def standardize_response_schema(self, schema):
+    def _standardize_response_schema(self, schema):
         return {
             "type": "object",
             "properties": {

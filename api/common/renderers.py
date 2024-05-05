@@ -39,6 +39,14 @@ class ResponseStandardizer:
         # )
         return getattr(self.view, "wrapper_key", "data")
 
+    def get_wrapping_excluded_fields(self):
+        # return getattr(
+        #     self.view,
+        #     "wrapping_excluded_fields",
+        #     settings.DEFFAULT_WRAPPING_EXCLUDED_FIELDS,
+        # )
+        return getattr(self.view, "wrapping_excluded_fields", ["links"])
+
     def get_standard_message(self, response):
         return responses[response.status_code]
 
@@ -55,7 +63,15 @@ class ResponseStandardizer:
         if isinstance(standardized_data, str):
             standardized_data = {"message": standardized_data}
         elif is_successful:
-            standardized_data = {wrapper_key: standardized_data}
+            unwrapped_data = {
+                field: standardized_data.pop(field, None)
+                for field in self.get_wrapping_excluded_fields()
+                if field is not None
+            }
+            standardized_data = {
+                **unwrapped_data,
+                wrapper_key: standardized_data,
+            }
 
         if "success" not in standardized_data:
             standardized_data["success"] = is_successful
