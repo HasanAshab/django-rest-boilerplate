@@ -35,6 +35,7 @@ class AutoSchema(BaseAutoSchema):
         return response
 
     def format_response_schema(self, schema):
+        print(self._registry)
         return {
             "type": "object",
             "properties": {
