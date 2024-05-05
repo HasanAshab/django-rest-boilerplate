@@ -7,7 +7,7 @@ class StandardizedAutoSchema(BaseAutoSchema):
     def _get_response_for_code(
         self, serializer, status_code, media_types=None, direction="response"
     ):
-        response_standardizer = ResponseStandardizer(self._view)
+        self._response_standardizer = ResponseStandardizer(self._view)
         response = super()._get_response_for_code(
             serializer, status_code, media_types, direction
         )
@@ -29,20 +29,33 @@ class StandardizedAutoSchema(BaseAutoSchema):
 
         if not (
             getattr(serializer_meta, "should_standardize_schema", True)
-            and response_standardizer.should_standardize()
+            and self._response_standardizer.should_standardize()
         ):
             return response
 
-        formatted_schema = self._standardize_response_schema(schema)
+        formatted_schema = self._standardize_response_schema(reference)
         content["application/json"]["schema"] = formatted_schema
         return response
 
-    def _standardize_response_schema(self, schema):
+    def _standardize_response_schema(self, reference):
+        schema_name = reference.split("/")[-1]
+        schema_key = (schema_name, "schemas")
+        schema = self.registry._components[schema_key].schema
+        unwrapped_fields = (
+            self._response_standardizer.get_wrapping_excluded_fields()
+        )
+        unwrapped_data = {
+            field: schema["properties"].pop(field, None)
+            for field in unwrapped_fields
+            if field is not None
+        }
+
         return {
             "type": "object",
             "properties": {
                 "success": {"type": "boolean"},
                 "message": {"type": "string"},
                 "data": schema,
+                **unwrapped_data,
             },
         }

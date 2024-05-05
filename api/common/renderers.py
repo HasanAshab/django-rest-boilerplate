@@ -69,8 +69,8 @@ class ResponseStandardizer:
                 if field is not None
             }
             standardized_data = {
-                **unwrapped_data,
                 wrapper_key: standardized_data,
+                **unwrapped_data,
             }
 
         if "success" not in standardized_data:
