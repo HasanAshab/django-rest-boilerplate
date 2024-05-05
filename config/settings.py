@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
+    "drf_standardized_response",
     "drf_standardized_errors",
     "knox",
     "allauth",
@@ -217,12 +218,12 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
     # Response
     "DEFAULT_RENDERER_CLASSES": [
-        "api.common.renderers.StandardizedJSONRenderer",
+        "drf_standardized_response.renderers.StandardizedJSONRenderer",
     ],
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     # Docs
-    "DEFAULT_SCHEMA_CLASS": "api.docs.openapi.StandardizedAutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "drf_standardized_response.openapi.StandardizedAutoSchema",
 }
 
 # Api Docs

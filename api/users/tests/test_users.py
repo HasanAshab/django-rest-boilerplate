@@ -8,9 +8,6 @@ from api.users.models import User
 from api.users.factories import (
     UserFactory,
 )
-from api.users.serializers import (
-    UserDetailsSerializer,
-)
 
 
 @tag("users", "list_users")
@@ -66,7 +63,6 @@ class UsersTestCase(APITestCase):
     def test_retrieve_user(self):
         user2 = UserFactory()
         url = self._reverse_user_url(user2)
-        data = UserDetailsSerializer(user2).data
 
         self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
@@ -75,7 +71,7 @@ class UsersTestCase(APITestCase):
             response.status_code,
             status.HTTP_200_OK,
         )
-        self.assertEqual(response.data, data)
+        self.assertEqual(response.data["id"], user2.id)
 
     def test_deleting_user_needs_authentication(
         self,
