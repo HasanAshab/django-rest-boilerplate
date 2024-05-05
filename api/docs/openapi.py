@@ -6,6 +6,7 @@ class AutoSchema(BaseAutoSchema):
     def _get_response_for_code(
         self, serializer, status_code, media_types=None, direction="response"
     ):
+        print(self._view)
         response = super()._get_response_for_code(
             serializer, status_code, media_types, direction
         )

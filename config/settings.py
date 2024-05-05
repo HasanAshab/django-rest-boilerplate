@@ -217,7 +217,7 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
     # Response
     "DEFAULT_RENDERER_CLASSES": [
-        "api.common.renderers.JSONRenderer",
+        "api.common.renderers.StandardizedJSONRenderer",
     ],
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
