@@ -1,15 +1,18 @@
 from drf_standardized_errors.openapi import AutoSchema as BaseAutoSchema
 from drf_spectacular.utils import OpenApiResponse
+from api.common.renderers import ResponseStandardizer
 
 
 class AutoSchema(BaseAutoSchema):
     def _get_response_for_code(
         self, serializer, status_code, media_types=None, direction="response"
     ):
-        print(self._view)
+        response_standardizer = ResponseStandardizer(self._view)
         response = super()._get_response_for_code(
             serializer, status_code, media_types, direction
         )
+        if not response_standardizer.should_standardize():
+            return response
         if isinstance(serializer, OpenApiResponse):
             serializer = serializer.response
 
@@ -24,15 +27,7 @@ class AutoSchema(BaseAutoSchema):
         if not reference:
             return response
 
-        is_paginated_response = reference.startswith(
-            "#/components/schemas/Paginated"
-        )
-        is_error_response = "ErrorResponse" in reference
-        if not getattr(
-            serializer,
-            "should_format",
-            not (is_paginated_response or is_error_response),
-        ):
+        if "ErrorResponse" in reference:
             return response
 
         formatted_schema = self.format_response_schema(schema)
