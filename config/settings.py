@@ -222,7 +222,7 @@ REST_FRAMEWORK = {
     # Test
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     # Docs
-    "DEFAULT_SCHEMA_CLASS": "api.docs.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "api.docs.openapi.StandardizedAutoSchema",
 }
 
 # Api Docs
