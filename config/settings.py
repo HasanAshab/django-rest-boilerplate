@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_standardized_response",
     "drf_standardized_errors",
+    "drf_pagination_meta_wrap",
     "knox",
     "allauth",
     "allauth.account",
