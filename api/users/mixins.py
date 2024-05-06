@@ -9,7 +9,7 @@ class UserAvatarLinkSerializerMixin(metaclass=serializers.SerializerMetaclass):
         inline_serializer(
             name="UserAvatarLink",
             fields={
-                "avatar": serializers.URLField(),
+                "avatar": serializers.URLField(allow_null=True),
             },
         )
     )

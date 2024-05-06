@@ -51,7 +51,7 @@ class ListUserSerializer(
             name="ListUserLinks",
             fields={
                 "self": serializers.URLField(),
-                "avatar": serializers.URLField(),
+                "avatar": serializers.URLField(allow_null=True),
             },
         )
     )
