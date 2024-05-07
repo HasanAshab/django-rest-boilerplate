@@ -20,14 +20,14 @@ from .serializers import (
     ProfileSerializer,
     PhoneNumberSerializer,
 )
-from .pagination import UserCursorPagination
+from .pagination import UserPagination
 
 
 class UsersView(ListAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
     serializer_class = ListUserSerializer
-    pagination_class = UserCursorPagination
+    pagination_class = UserPagination
 
 
 class ProfileView(RetrieveUpdateDestroyAPIView):
