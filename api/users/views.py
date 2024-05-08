@@ -10,7 +10,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 from drf_spectacular.utils import extend_schema
-from api.docs.utils import successful_api_response
+from drf_standardized_response.openapi.utils import standard_openapi_response
 from .models import User
 from .permissions import DeleteUserPermission
 from .serializers import (
@@ -54,8 +54,8 @@ class PhoneNumberView(APIView):
     @extend_schema(
         request=PhoneNumberSerializer,
         responses={
-            200: successful_api_response(),
-            202: successful_api_response(
+            200: standard_openapi_response(),
+            202: standard_openapi_response(
                 description="Verification code sent to the phone number"
             ),
         },
