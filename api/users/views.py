@@ -10,7 +10,6 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 from drf_spectacular.utils import extend_schema
-from allauth.headless.account.views import ChangePasswordView
 from api.docs.utils import successful_api_response
 from .models import User
 from .permissions import DeleteUserPermission
@@ -43,13 +42,6 @@ class UserDetailsView(RetrieveDestroyAPIView):
     queryset = User.objects.all()
     lookup_field = "username"
     serializer_class = UserDetailsSerializer
-
-
-class PasswordChangeView(ChangePasswordView):
-    http_method_names = ("patch",)
-
-    def patch(self, *args, **kwargs):
-        return super().post(*args, **kwargs)
 
 
 class PhoneNumberView(APIView):
