@@ -24,9 +24,7 @@ class UserModel(AbstractUser):
     first_name = None
     last_name = None
     name = models.CharField(
-        _("Name"),
-        max_length=255,
-        null=True,
+        _("Name"), max_length=255, blank=True, help_text="Name of the user"
     )
     username = models.CharField(
         _("username"),
@@ -41,12 +39,15 @@ class UserModel(AbstractUser):
             "unique": _("A user with that username already exists."),
         },
     )
-    phone_number = PhoneNumberField(_("Phone Number"), null=True)
+    phone_number = PhoneNumberField(
+        _("Phone Number"), blank=True, help_text="Phone number of the user"
+    )
     avatar = models.ImageField(
         _("Avatar"),
         upload_to="uploads/avatars/",
         max_length=100,
-        null=True,
+        blank=True,
+        help_text="Avatar (or profile pic) of the user",
     )
 
     @property

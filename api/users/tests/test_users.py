@@ -15,7 +15,7 @@ class UsersTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
 
-    def _reverse_user_url(self, user: User) -> str:
+    def _reverse_user_url(self, user):
         return reverse(
             "user-details",
             kwargs={"username": user.username},

@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.twitter",
     "api.common",
     "api.authentication",
+    "api.accounts",
     "api.users",
 ]
 
