@@ -25,7 +25,7 @@ class ListUserSerializer(
         return {
             **super().get_links(user),
             "self": reverse(
-                "user-details", kwargs={"username": user.username}
+                "user_details", kwargs={"username": user.username}
             ),
         }
 

@@ -14,6 +14,6 @@ urlpatterns = [
     path(
         "account/phone-number/",
         PhoneNumberView.as_view(),
-        name="phone-number",
+        name="phone_number",
     ),
 ]
