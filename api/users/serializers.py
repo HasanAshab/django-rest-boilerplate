@@ -5,7 +5,7 @@ from .models import User
 from .mixins import UserAvatarLinkSerializerMixin
 
 
-class ListUserSerializer(
+class UserListSerializer(
     UserAvatarLinkSerializerMixin, serializers.ModelSerializer
 ):
     class Meta:

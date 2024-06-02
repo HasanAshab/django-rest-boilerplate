@@ -8,7 +8,7 @@ from rest_framework.generics import (
 from .models import User
 from .permissions import DeleteUserPermission
 from .serializers import (
-    ListUserSerializer,
+    UserListSerializer,
     UserDetailsSerializer,
 )
 from .pagination import UserPagination
@@ -17,7 +17,7 @@ from .pagination import UserPagination
 class UsersView(ListAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
-    serializer_class = ListUserSerializer
+    serializer_class = UserListSerializer
     pagination_class = UserPagination
 
 
