@@ -60,4 +60,4 @@ class UserModel(AbstractUser):
         db_table = "users"
 
 
-User = LazyProxy(get_user_model)
+User: UserModel = LazyProxy(get_user_model)
