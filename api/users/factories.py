@@ -2,7 +2,7 @@ import factory
 from django.contrib.auth.hashers import (
     make_password,
 )
-from .models import UserModel
+from .models import User
 from allauth.account.models import (
     EmailAddress,
 )
@@ -16,7 +16,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.LazyAttribute(lambda o: make_password(o.plain_password))
 
     class Meta:
-        model = UserModel
+        model = User
         exclude = ("plain_password",)
 
     class Params:
